@@ -11,48 +11,47 @@ import XCTest
 
 final class URLGenerationTests: XCTestCase {
 
-    func testURLRequestSetJsonContentType() {
+    func testSettingJSONContentTypeAddsHeader() throws {
         // Arrange
-        var urlRequest = URLRequest(url: URL(string: "https://api.themoviedb.org")!)
+        var urlRequest = URLRequest(url: try XCTUnwrap(URL(string: "https://api.themoviedb.org")))
         // Act
         urlRequest.setJSONContentType()
-        let allHeaderFields = urlRequest.allHTTPHeaderFields
         // Assert
-        XCTAssertNotNil(allHeaderFields!["Content-Type"])
+        XCTAssertEqual(urlRequest.value(forHTTPHeaderField: "Content-Type"), "application/json; charset=utf-8")
     }
 
-    func testURLRequestSetJsonContentTypeNil() {
+    func testNewRequestHasNoHeaders() throws {
         // Arrange
-        let urlRequest = URLRequest(url: URL(string: "https://api.themoviedb.org")!)
+        let urlRequest = URLRequest(url: try XCTUnwrap(URL(string: "https://api.themoviedb.org")))
         // Act
         let allHeaderFields = urlRequest.allHTTPHeaderFields
         // Assert
         XCTAssertNil(allHeaderFields)
     }
 
-    func testPercentEscapedEmptyParamters() {
+    func testPercentEscapedEmptyParameters() {
         // Arrange
-        let parametersDictionary: [String: Any] = [:]
+        let parameters: [String: Any] = [:]
         // Act
-        let percentEscapedParameters = parametersDictionary.percentEscaped()
+        let percentEscapedParameters = parameters.percentEscaped()
         // Assert
         XCTAssertTrue(percentEscapedParameters.isEmpty)
     }
 
-    func testPercentEscapedSingleParameters() {
+    func testPercentEscapedSingleParameter() {
         // Arrange
-        let parametersDictionary: [String: Any] = ["Param1": "A"]
+        let parameters: [String: Any] = ["Param1": "A"]
         // Act
-        let percentEscapedParameters = parametersDictionary.percentEscaped()
+        let percentEscapedParameters = parameters.percentEscaped()
         // Assert
         XCTAssertEqual(percentEscapedParameters, "Param1=A")
     }
 
     func testPercentEscapedMultipleParameters() {
         // Arrange
-        let parametersDictionary: [String: Any] = ["Param1": "A", "Param2": "B"]
+        let parameters: [String: Any] = ["Param1": "A", "Param2": "B"]
         // Act
-        let percentEscapedParameters = parametersDictionary.percentEscaped()
+        let percentEscapedParameters = parameters.percentEscaped()
         let possibleEscapedParameters = ["Param1=A&Param2=B", "Param2=B&Param1=A"]
         // Assert
         XCTAssertTrue(possibleEscapedParameters.contains(percentEscapedParameters))
