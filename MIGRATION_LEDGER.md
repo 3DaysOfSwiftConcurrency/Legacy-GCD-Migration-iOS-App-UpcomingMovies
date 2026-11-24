@@ -24,6 +24,10 @@
     {
       "action": "Verified Map CFA feature ownership in the Modernizer session.",
       "result": "Host build and tests passed for UpcomingMovies on iPhone 17 Pro."
+    },
+    {
+      "action": "Verified Establish the CFA composition root in the Modernizer session.",
+      "result": "Host build and tests passed for UpcomingMovies on iPhone 17 Pro."
     }
   ],
   "blocker": null,

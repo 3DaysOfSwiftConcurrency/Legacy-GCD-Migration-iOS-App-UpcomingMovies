@@ -400,6 +400,7 @@
 		E2C145F82C2BD0A8006E1D4B /* CastModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C145F72C2BD0A8006E1D4B /* CastModelTests.swift */; };
 		E2C14FF72C1956F40050236F /* ListProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C14FF62C1956F40050236F /* ListProtocol.swift */; };
 		E2C1D3FA2A2D999900D0670C /* MockViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C1D3F92A2D999900D0670C /* MockViewController.swift */; };
+		CFA000009990000000000001 /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CFA000009990000000000002 /* AppModel.swift */; };
 		E2C39A2624BA558F007938BC /* AccountFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C39A2524BA558F007938BC /* AccountFeature.swift */; };
 		E2C42E1424C3E8900047A8EF /* ProfileFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C42E1324C3E8900047A8EF /* ProfileFactory.swift */; };
 		E2C42E1624C3F3FC0047A8EF /* ProfileViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C42E1524C3F3FC0047A8EF /* ProfileViewModelTests.swift */; };
@@ -937,6 +938,7 @@
 		E2C145F72C2BD0A8006E1D4B /* CastModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CastModelTests.swift; sourceTree = "<group>"; };
 		E2C14FF62C1956F40050236F /* ListProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListProtocol.swift; sourceTree = "<group>"; };
 		E2C1D3F92A2D999900D0670C /* MockViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockViewController.swift; sourceTree = "<group>"; };
+		CFA000009990000000000002 /* AppModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
 		E2C39A2524BA558F007938BC /* AccountFeature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountFeature.swift; sourceTree = "<group>"; };
 		E2C42E1324C3E8900047A8EF /* ProfileFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileFactory.swift; sourceTree = "<group>"; };
 		E2C42E1524C3F3FC0047A8EF /* ProfileViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModelTests.swift; sourceTree = "<group>"; };
@@ -1175,6 +1177,7 @@
 		CFA000000000000000000004 /* 2 - AppModel */ = {
 			isa = PBXGroup;
 			children = (
+				CFA000009990000000000002 /* AppModel.swift */,
 				CFA000000000000000000005 /* Features */,
 				CFA000000000000000000007 /* Legacy Dependency Composition */,
 			);
@@ -3434,6 +3437,7 @@
 				E270962A247B3DC300AE694E /* ConfigurationHandler.swift in Sources */,
 				E297A766248C6C5700AC89B9 /* ImageTransitionHandler.swift in Sources */,
 				E2143DBA22571EC2003E939F /* ProfileAccountInfoCellViewModel.swift in Sources */,
+				CFA000009990000000000001 /* AppModel.swift in Sources */,
 				E2C39A2624BA558F007938BC /* AccountFeature.swift in Sources */,
 				E2CF112324A7F4D60048AFC0 /* CustomListDetailCoordinator.swift in Sources */,
 				E270980B220FAF99007F18A2 /* MovieVideoCell.swift in Sources */,

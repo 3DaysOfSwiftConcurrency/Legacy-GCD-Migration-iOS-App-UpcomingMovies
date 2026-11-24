@@ -12,21 +12,9 @@ import UpcomingMoviesDomain
 final class SignInAssembly: Assembly {
 
     func assemble(container: Container) {
-        container.register(SignInFeature.self) { resolver in
-            guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
-                fatalError("UseCaseProviderProtocol dependency could not be resolved")
-            }
+        container.register(SignInViewModelProtocol.self) { _ in
             return MainActor.assumeIsolated {
-                SignInFeature(authUseCase: useCaseProvider.authUseCase(), userUseCase: useCaseProvider.userUseCase())
-            }
-        }
-
-        container.register(SignInViewModelProtocol.self) { resolver in
-            guard let signInFeature = resolver.resolve(SignInFeature.self) else {
-                fatalError("SignInFeature dependency could not be resolved")
-            }
-            return MainActor.assumeIsolated {
-                SignInViewModel(signInFeature: signInFeature)
+                SignInViewModel(signInFeature: AppModel.shared.signInFeature)
             }
         }
     }

@@ -5,6 +5,7 @@
 //  Created by Matthew Thomas on 26/10/26.
 //
 
+import Combine
 import Foundation
 import UpcomingMoviesDomain
 
@@ -30,8 +31,10 @@ final class SearchMoviesFeature {
     private var queuedSearchSaveTask: Task<Void, Never>?
     private var queuedSearchSaveIdentifier: UUID?
 
-    var movieSearchesDidChange: (() -> Void)?
-    var movieVisitsDidChange: (() -> Void)?
+    private let movieSearchesDidChangeSubject = PassthroughSubject<Void, Never>()
+    var movieSearchesDidChange: AnyPublisher<Void, Never> { movieSearchesDidChangeSubject.eraseToAnyPublisher() }
+    private let movieVisitsDidChangeSubject = PassthroughSubject<Void, Never>()
+    var movieVisitsDidChange: AnyPublisher<Void, Never> { movieVisitsDidChangeSubject.eraseToAnyPublisher() }
 
     init(movieUseCase: MovieUseCaseProtocol,
          movieSearchUseCase: MovieSearchUseCaseProtocol,
@@ -46,13 +49,13 @@ final class SearchMoviesFeature {
 
         self.movieSearchUseCase.didUpdateMovieSearch = { [weak self] in
             Task { @MainActor [weak self] in
-                self?.movieSearchesDidChange?()
+                self?.movieSearchesDidChangeSubject.send(())
             }
         }
 
         self.movieVisitUseCase.didUpdateMovieVisit = { [weak self] in
             Task { @MainActor [weak self] in
-                self?.movieVisitsDidChange?()
+                self?.movieVisitsDidChangeSubject.send(())
             }
         }
     }

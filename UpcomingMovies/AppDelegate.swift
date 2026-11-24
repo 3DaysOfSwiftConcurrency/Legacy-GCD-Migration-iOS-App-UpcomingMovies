@@ -16,8 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var navigationHandler: NavigationHandlerProtocol?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        _ = DIContainer.shared
-
         navigationHandler = DIContainer.shared.resolve()
 
         configureGlobalAppearanceIfNeeded()
@@ -25,8 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // We configure the remote data source with the API key and the read access token
         let baseConfiguration: BaseConfiguration = PropertyListHelper.decode()
         let remoteDataSource: RemoteDataSourceProtocol = DIContainer.shared.resolve()
-        remoteDataSource.configure(with: baseConfiguration.keys.apiKey,
-                                   readAccessToken: baseConfiguration.keys.readAccessToken)
+        AppModel.shared.applicationDidFinishLaunching(configuration: baseConfiguration, remoteDataSource: remoteDataSource)
 
         // We handle app launch if it was triggered by a shorcut item
         if let launchOptions = launchOptions,

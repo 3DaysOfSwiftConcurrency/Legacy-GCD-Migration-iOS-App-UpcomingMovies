@@ -12,18 +12,10 @@ import UpcomingMoviesDomain
 final class AccountAssembly: Assembly {
 
     func assemble(container: Container) {
-        container.register(AccountFeature.self) { resolver in
-            guard let authHandler = resolver.resolve(AuthenticationHandlerProtocol.self) else {
-                fatalError("AuthenticationHandlerProtocol dependency could not be resolved")
+        container.register(AccountViewModelProtocol.self) { _ in
+            return MainActor.assumeIsolated {
+                AccountViewModel(accountFeature: AppModel.shared.accountFeature)
             }
-            return AccountFeature(authHandler: authHandler)
-        }
-
-        container.register(AccountViewModelProtocol.self) { resolver in
-            guard let accountFeature = resolver.resolve(AccountFeature.self) else {
-                fatalError("AccountFeature dependency could not be resolved")
-            }
-            return AccountViewModel(accountFeature: accountFeature)
         }
     }
 

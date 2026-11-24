@@ -13,27 +13,11 @@ final class UpcomingMoviesAssembly: Assembly {
 
     func assemble(container: Container) {
         // The UIKit screen resolves these synchronous factories on the main actor.
-        container.register(UpcomingMoviesFeature.self) { resolver in
-            guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
-                fatalError("UseCaseProviderProtocol dependency could not be resolved")
-            }
-            guard let genreHandler = resolver.resolve(GenreHandlerProtocol.self) else {
-                fatalError("GenreHandlerProtocol dependency could not be resolved")
-            }
-            return MainActor.assumeIsolated {
-                UpcomingMoviesFeature(movieUseCase: useCaseProvider.movieUseCase(),
-                                      genreHandler: genreHandler)
-            }
-        }.inObjectScope(.container)
-
         container.register(UpcomingMoviesFactoryProtocol.self) { _ in
             return UpcomingMoviesFactory()
         }
 
         container.register(UpcomingMoviesViewModelProtocol.self) { resolver in
-            guard let upcomingMoviesFeature = resolver.resolve(UpcomingMoviesFeature.self) else {
-                fatalError("UpcomingMoviesFeature dependency could not be resolved")
-            }
             guard let factory = resolver.resolve(UpcomingMoviesFactoryProtocol.self) else {
                 fatalError("UpcomingMoviesFactoryProtocol dependency could not be resolved")
             }
@@ -41,7 +25,7 @@ final class UpcomingMoviesAssembly: Assembly {
                 fatalError("UserPreferencesHandlerProtocol dependency could not be resolved")
             }
             return MainActor.assumeIsolated {
-                UpcomingMoviesViewModel(upcomingMoviesFeature: upcomingMoviesFeature,
+                UpcomingMoviesViewModel(upcomingMoviesFeature: AppModel.shared.upcomingMoviesFeature,
                                         factory: factory,
                                         userPreferencesHandler: userPreferencesHandler)
             }

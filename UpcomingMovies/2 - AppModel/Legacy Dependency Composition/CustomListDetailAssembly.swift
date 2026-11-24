@@ -12,21 +12,9 @@ import UpcomingMoviesDomain
 final class CustomListDetailAssembly: Assembly {
 
     func assemble(container: Container) {
-        container.register(CustomListDetailFeature.self) { resolver in
-            guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
-                fatalError("UseCaseProviderProtocol dependency could not be resolved")
-            }
+        container.register(CustomListDetailViewModelProtocol.self) { (_, list: ListProtocol) in
             return MainActor.assumeIsolated {
-                CustomListDetailFeature(accountUseCase: useCaseProvider.accountUseCase())
-            }
-        }
-
-        container.register(CustomListDetailViewModelProtocol.self) { (resolver, list: ListProtocol) in
-            guard let customListDetailFeature = resolver.resolve(CustomListDetailFeature.self) else {
-                fatalError("CustomListDetailFeature dependency could not be resolved")
-            }
-            return MainActor.assumeIsolated {
-                CustomListDetailViewModel(list, customListDetailFeature: customListDetailFeature)
+                CustomListDetailViewModel(list, customListDetailFeature: AppModel.shared.customListDetailFeature)
             }
         }
     }

@@ -6,6 +6,7 @@
 //  Copyright © 2019 Alonso. All rights reserved.
 //
 
+import Combine
 import UpcomingMoviesDomain
 
 @MainActor
@@ -13,6 +14,7 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
     // MARK: - Dependencies
 
+    private var changesSubscription: AnyCancellable?
     private let searchMoviesFeature: SearchMoviesFeature
     private var genresTask: Task<Void, Never>?
     private var movieVisitsTask: Task<Void, Never>?
@@ -53,7 +55,7 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
     init(searchMoviesFeature: SearchMoviesFeature) {
         self.searchMoviesFeature = searchMoviesFeature
 
-        self.searchMoviesFeature.movieVisitsDidChange = { [weak self] in
+        changesSubscription = searchMoviesFeature.movieVisitsDidChange.sink { [weak self] in
             self?.loadVisitedMovies()
         }
     }

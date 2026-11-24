@@ -12,22 +12,10 @@ import UpcomingMoviesDomain
 final class SavedMoviesAssembly: Assembly {
 
     func assemble(container: Container) {
-        container.register(SavedMoviesFeature.self) { resolver in
-            guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
-                fatalError("UseCaseProviderProtocol dependency could not be resolved")
-            }
-            return MainActor.assumeIsolated {
-                SavedMoviesFeature(accountUseCase: useCaseProvider.accountUseCase())
-            }
-        }
-
-        container.register(SavedMoviesViewModelProtocol.self) { (resolver, displayTitle: String?) in
-            guard let savedMoviesFeature = resolver.resolve(SavedMoviesFeature.self) else {
-                fatalError("SavedMoviesFeature dependency could not be resolved")
-            }
+        container.register(SavedMoviesViewModelProtocol.self) { (_, displayTitle: String?) in
             return MainActor.assumeIsolated {
                 let collection: SavedMoviesCollection = displayTitle == ProfileOption.watchlist.title ? .watchlist : .favorites
-                let viewModel = SavedMoviesViewModel(savedMoviesFeature: savedMoviesFeature, collection: collection)
+                let viewModel = SavedMoviesViewModel(savedMoviesFeature: AppModel.shared.savedMoviesFeature, collection: collection)
                 viewModel.displayTitle = displayTitle
 
                 return viewModel

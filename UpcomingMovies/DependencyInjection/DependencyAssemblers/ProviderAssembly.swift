@@ -23,7 +23,7 @@ final class ProviderAssembly: Assembly {
                 fatalError("RemoteDataSourceProtocol dependency could not be resolved")
             }
             return UseCaseProvider(localDataSource: localDataSource, remoteDataSource: remoteDataSource)
-        }
+        }.inObjectScope(.container)
     }
 
 }

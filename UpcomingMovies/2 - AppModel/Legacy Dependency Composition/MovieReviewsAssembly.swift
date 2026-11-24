@@ -12,23 +12,11 @@ import UpcomingMoviesDomain
 final class MovieReviewsAssembly: Assembly {
 
     func assemble(container: Container) {
-        container.register(MovieReviewsFeature.self) { resolver in
-            guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
-                fatalError("UseCaseProviderProtocol dependency could not be resolved")
-            }
-            return MainActor.assumeIsolated {
-                MovieReviewsFeature(movieUseCase: useCaseProvider.movieUseCase())
-            }
-        }
-
-        container.register(MovieReviewsViewModelProtocol.self) { (resolver, movieId: Int, movieTitle: String) in
-            guard let movieReviewsFeature = resolver.resolve(MovieReviewsFeature.self) else {
-                fatalError("MovieReviewsFeature dependency could not be resolved")
-            }
+        container.register(MovieReviewsViewModelProtocol.self) { (_, movieId: Int, movieTitle: String) in
             return MainActor.assumeIsolated {
                 MovieReviewsViewModel(movieId: movieId,
                                       movieTitle: movieTitle,
-                                      movieReviewsFeature: movieReviewsFeature)
+                                      movieReviewsFeature: AppModel.shared.movieReviewsFeature)
             }
         }
     }

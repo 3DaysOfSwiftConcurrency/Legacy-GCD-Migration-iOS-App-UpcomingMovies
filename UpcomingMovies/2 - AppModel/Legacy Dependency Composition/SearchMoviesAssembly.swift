@@ -13,38 +13,14 @@ import UpcomingMoviesDomain
 final class SearchMoviesAssembly: Assembly {
 
     func assemble(container: Container) {
-        container.register(SearchMoviesFeature.self) { resolver in
-            guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
-                fatalError("UseCaseProviderProtocol dependency could not be resolved")
-            }
-            guard let authenticationHandler = resolver.resolve(AuthenticationHandlerProtocol.self) else {
-                fatalError("AuthenticationHandlerProtocol dependency could not be resolved")
-            }
-
+        container.register(SearchOptionsViewModelProtocol.self) { _ in
             return MainActor.assumeIsolated {
-                SearchMoviesFeature(
-                    movieUseCase: useCaseProvider.movieUseCase(),
-                    movieSearchUseCase: useCaseProvider.movieSearchUseCase(),
-                    movieVisitUseCase: useCaseProvider.movieVisitUseCase(),
-                    genreUseCase: useCaseProvider.genreUseCase(),
-                    authenticationHandler: authenticationHandler
-                )
+                SearchOptionsViewModel(searchMoviesFeature: AppModel.shared.searchMoviesFeature)
             }
         }
-        container.register(SearchOptionsViewModelProtocol.self) { resolver in
-            guard let searchMoviesFeature = resolver.resolve(SearchMoviesFeature.self) else {
-                fatalError("SearchMoviesFeature dependency could not be resolved")
-            }
+        container.register(SearchMoviesResultViewModelProtocol.self) { _ in
             return MainActor.assumeIsolated {
-                SearchOptionsViewModel(searchMoviesFeature: searchMoviesFeature)
-            }
-        }
-        container.register(SearchMoviesResultViewModelProtocol.self) { resolver in
-            guard let searchMoviesFeature = resolver.resolve(SearchMoviesFeature.self) else {
-                fatalError("SearchMoviesFeature dependency could not be resolved")
-            }
-            return MainActor.assumeIsolated {
-                SearchMoviesResultViewModel(searchMoviesFeature: searchMoviesFeature)
+                SearchMoviesResultViewModel(searchMoviesFeature: AppModel.shared.searchMoviesFeature)
             }
         }
     }
