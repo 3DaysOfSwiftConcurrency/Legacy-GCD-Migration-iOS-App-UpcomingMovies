@@ -6,26 +6,20 @@
 //  Copyright © 2022 Alonso. All rights reserved.
 //
 
-import Dispatch
-
 final class PublishBindable<T>: PublishBindableProtocol {
 
     typealias Listener = ((T) -> Void)
     private var listener: Listener?
 
-    private var dispatchQueue: DispatchQueue?
+    private var delivery: BindingDelivery = .immediate
 
-    func bind(_ listener: @escaping Listener, on dispatchQueue: DispatchQueue? = nil) {
+    func bind(_ listener: @escaping Listener, on delivery: BindingDelivery = .immediate) {
         self.listener = listener
-        self.dispatchQueue = dispatchQueue
+        self.delivery = delivery
     }
 
     func send(_ value: T) {
-        if let dispatchQueue = dispatchQueue {
-            dispatchQueue.async { self.listener?(value) }
-        } else {
-            self.listener?(value)
-        }
+        delivery.send { self.listener?(value) }
     }
 
 }

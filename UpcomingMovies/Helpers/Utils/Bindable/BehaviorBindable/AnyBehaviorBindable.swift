@@ -6,16 +6,14 @@
 //  Copyright © 2022 Alonso. All rights reserved.
 //
 
-import Dispatch
-
 final class AnyBehaviorBindable<T>: BehaviorBindableProtocol {
 
     typealias Model = T
     typealias Listener = ((T) -> Void)
 
     private let valueClosure: ((T) -> Void)
-    private let bindClosure: ((@escaping Listener, DispatchQueue?) -> Void)
-    private let bindAndFireClosure: ((@escaping Listener, DispatchQueue?) -> Void)
+    private let bindClosure: ((@escaping Listener, BindingDelivery) -> Void)
+    private let bindAndFireClosure: ((@escaping Listener, BindingDelivery) -> Void)
 
     var value: T {
         didSet {
@@ -33,12 +31,12 @@ final class AnyBehaviorBindable<T>: BehaviorBindableProtocol {
         }
     }
 
-    func bind(_ listener: @escaping Listener, on dispatchQueue: DispatchQueue? = nil) {
-        bindClosure(listener, dispatchQueue)
+    func bind(_ listener: @escaping Listener, on delivery: BindingDelivery = .immediate) {
+        bindClosure(listener, delivery)
     }
 
-    func bindAndFire(_ listener: @escaping ((T) -> Void), on dispatchQueue: DispatchQueue? = nil) {
-        bindAndFireClosure(listener, dispatchQueue)
+    func bindAndFire(_ listener: @escaping ((T) -> Void), on delivery: BindingDelivery = .immediate) {
+        bindAndFireClosure(listener, delivery)
     }
 
 }

@@ -10,6 +10,10 @@ import UIKit
 
 final class ToastView: UIView {
 
+    var dismissalTask: Task<Void, Never>?
+
+    deinit { dismissalTask?.cancel() }
+
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0

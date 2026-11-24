@@ -6,14 +6,12 @@
 //  Copyright © 2022 Alonso. All rights reserved.
 //
 
-import Dispatch
-
 final class BehaviorBindable<T>: BehaviorBindableProtocol {
 
     typealias Listener = ((T) -> Void)
     private var listener: Listener?
 
-    private var dispatchQueue: DispatchQueue?
+    private var delivery: BindingDelivery = .immediate
 
     var value: T {
         didSet {
@@ -25,25 +23,21 @@ final class BehaviorBindable<T>: BehaviorBindableProtocol {
         self.value = value
     }
 
-    func bind(_ listener: @escaping Listener, on dispatchQueue: DispatchQueue? = nil) {
+    func bind(_ listener: @escaping Listener, on delivery: BindingDelivery = .immediate) {
         self.listener = listener
-        self.dispatchQueue = dispatchQueue
+        self.delivery = delivery
     }
 
-    func bindAndFire(_ listener: @escaping Listener, on dispatchQueue: DispatchQueue? = nil) {
+    func bindAndFire(_ listener: @escaping Listener, on delivery: BindingDelivery = .immediate) {
         self.listener = listener
-        self.dispatchQueue = dispatchQueue
+        self.delivery = delivery
         sendValue()
     }
 
     // MARK: - Private
 
     private func sendValue() {
-        if let dispatchQueue = dispatchQueue {
-            dispatchQueue.async { self.listener?(self.value) }
-        } else {
-            self.listener?(self.value)
-        }
+        delivery.send { self.listener?(self.value) }
     }
 
 }

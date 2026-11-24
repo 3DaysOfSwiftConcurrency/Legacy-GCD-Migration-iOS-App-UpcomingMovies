@@ -35,7 +35,7 @@ final class SearchOptionsViewModelTests: XCTestCase {
         // Act
         viewModel.needsContentReload.bind({ _ in
             expectation.fulfill()
-        }, on: nil)
+        }, on: .immediate)
         featureDependencies.genreUseCase.fetchAllResult = .success(genresToTest)
         viewModel.loadGenres()
         // Assert
@@ -50,7 +50,7 @@ final class SearchOptionsViewModelTests: XCTestCase {
         // Act
         viewModel.needsContentReload.bind({ _ in
             expectation.fulfill()
-        }, on: nil)
+        }, on: .immediate)
         featureDependencies.movieVisitUseCase.movieVisitsResult = .success(movieVisitsToTest)
         viewModel.loadVisitedMovies()
         // Assert
@@ -65,7 +65,7 @@ final class SearchOptionsViewModelTests: XCTestCase {
         // Act
         viewModel.updateVisitedMovies.bind({ _ in
             expectation.fulfill()
-        }, on: nil)
+        }, on: .immediate)
 
         featureDependencies.movieVisitUseCase.movieVisitsResult = .success(movieVisitsToTest)
         await viewModel.loadVisitedMovies().value

@@ -29,11 +29,9 @@ final class MockMovieDetailInteractor: MovieDetailInteractorProtocol {
 
     var findGenresResult: Result<[Genre], Error>? = .success([])
     private(set) var findGenresCallCount = 0
-    func findGenres(for identifiers: [Int], completion: @escaping (Result<[Genre], Error>) -> Void) {
-        if let findGenresResult {
-            completion(findGenresResult)
-        }
+    func findGenres(for identifiers: [Int]) async -> [Genre] {
         findGenresCallCount += 1
+        return (try? findGenresResult?.get()) ?? []
     }
 
     var getMovieDetailResult: Result<MovieProtocol, Error>?

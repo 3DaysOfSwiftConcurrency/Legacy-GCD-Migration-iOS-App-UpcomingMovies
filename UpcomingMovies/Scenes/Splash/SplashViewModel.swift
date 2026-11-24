@@ -32,36 +32,35 @@ final class SplashViewModel: SplashViewModelProtocol {
 
     // MARK: - SplashViewModelProtocol
 
+    private var downloads: Task<Void, Never>?
+
+    deinit { downloads?.cancel() }
+
+    @MainActor
     func startInitialDownloads() {
-        let dispatchGroup = DispatchGroup()
-
-        dispatchGroup.enter()
-        interactor.getAppConfiguration { result in
-            self.updateAppConfiguration(result.wrappedValue)
-            dispatchGroup.leave()
-        }
-
-        dispatchGroup.enter()
-        interactor.getAllGenres { result in
-            self.updateAvailableMovieGenres(result.wrappedValue)
-            dispatchGroup.leave()
-        }
-
-        dispatchGroup.notify(queue: .global(qos: .userInitiated)) {
-            self.initialDownloadsEnded.send()
+        guard downloads == nil else { return }
+        downloads = Task { @MainActor [weak self, interactor, configurationHandler, genreHandler] in
+            async let configuration: Void = Self.loadConfiguration(interactor, into: configurationHandler)
+            async let genres: Void = Self.loadGenres(interactor, into: genreHandler)
+            _ = await (configuration, genres)
+            guard !Task.isCancelled else { return }
+            self?.downloads = nil
+            self?.initialDownloadsEnded.send()
         }
     }
 
-    // MARK: - Private
-
-    private func updateAppConfiguration(_ configuration: Configuration?) {
-        guard let configuration = configuration else { return }
-        configurationHandler.setConfiguration(configuration)
+    @MainActor
+    private static func loadConfiguration(_ interactor: SplashInteractorProtocol,
+                                          into handler: ConfigurationHandlerProtocol) async {
+        if let configuration = await interactor.appConfiguration(), !Task.isCancelled {
+            handler.setConfiguration(configuration)
+        }
     }
 
-    private func updateAvailableMovieGenres(_ genres: [Genre]?) {
-        guard let genres = genres else { return }
-        genreHandler.setGenres(genres)
+    @MainActor
+    private static func loadGenres(_ interactor: SplashInteractorProtocol, into handler: GenreHandlerProtocol) async {
+        if let genres = await interactor.allGenres(), !Task.isCancelled {
+            handler.setGenres(genres)
+        }
     }
-
 }

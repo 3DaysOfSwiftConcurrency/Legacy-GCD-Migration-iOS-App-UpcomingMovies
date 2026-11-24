@@ -12,7 +12,7 @@ protocol SplashViewModelProtocol {
 
     var initialDownloadsEnded: PublishBindable<Void> { get }
 
-    func startInitialDownloads()
+    @MainActor func startInitialDownloads()
 
 }
 
@@ -21,11 +21,11 @@ protocol SplashInteractorProtocol {
     /**
      * Fetch API configurations.
      */
-    func getAppConfiguration(completion: @escaping (Result<Configuration, Error>) -> Void)
+    @MainActor func appConfiguration() async -> Configuration?
 
     /**
      * Fetch all the available movie genres
      */
-    func getAllGenres(completion: @escaping (Result<[Genre], Error>) -> Void)
+    @MainActor func allGenres() async -> [Genre]?
 
 }

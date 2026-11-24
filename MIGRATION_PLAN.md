@@ -114,6 +114,26 @@ inventory. Before any completion claim, each in-scope primitive must record its
 owner, ordering/lifetime/error guarantee, replacement or retention decision,
 and verification evidence.
 
+### Step 6 — concurrency ownership
+
+- Bindables still deliver inline by default. UI bindings and loader commands
+  submit to one process-lifetime main-actor stream, preserving FIFO order
+  across different bindings.
+- Splash owns the startup task. Configuration and genres load as child tasks;
+  each successful result updates its handler, and navigation waits for both
+  outcomes. Concurrent appearances share the pending startup.
+- Movie detail title owns its genre lookup. The live repository reads locally
+  and synchronously; lookups stay on the main actor in identifier order,
+  skipping failures and missing records without concurrent array mutation.
+- Each toast owns its dismissal; the shrinking button retains each pending
+  revert so repeat requests do not silently lose their completions.
+- Network requests keep their terminal callbacks on the main actor, with a
+  main-run-loop fallback for the framework's iOS 12 deployment target.
+- Source scan: no first-party Swift references to `DispatchQueue`,
+  `DispatchGroup` or `OperationQueue` remain. Legacy use-case callbacks
+  remain at compatibility boundaries. A standalone binding-order check
+  passed; post-change app build, suite and runtime behaviour await host checks.
+
 ## Search route checkpoint — in progress
 
 - Completed: the entire Search UIKit presentation route, including its embedded

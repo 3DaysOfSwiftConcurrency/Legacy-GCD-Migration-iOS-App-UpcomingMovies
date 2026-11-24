@@ -57,24 +57,29 @@ extension UIView {
         }, completion: { completed in
             completion?(completed)
         })
-        DispatchQueue.main.asyncAfter(deadline: .now() + configuration.dismissDuration) {
+        toastView.dismissalTask = Task { @MainActor [weak self, weak toastView] in
+            do { try await Task.sleep(nanoseconds: UInt64(configuration.dismissDuration * 1_000_000_000)) }
+            catch { return }
+            guard let self, let toastView, self.toastView === toastView else { return }
             self.hideToast(withAnimationDuration: configuration.animationDuration)
         }
     }
 
     /// Hides the current presented toast view without animations.
     func hideToast() {
+        toastView?.dismissalTask?.cancel()
         toastView?.alpha = 0.0
         toastView?.removeFromSuperview()
         toastView = nil
     }
 
     func hideToast(withAnimationDuration duration: TimeInterval) {
+        guard let toastView else { return }
         UIView.animate(withDuration: duration, delay: 0.0, options: [.curveEaseOut, .allowUserInteraction], animations: {
-            self.toastView?.alpha = 0.0
+            toastView.alpha = 0.0
         }, completion: { _ in
-            self.toastView?.removeFromSuperview()
-            self.toastView = nil
+            toastView.removeFromSuperview()
+            if self.toastView === toastView { self.toastView = nil }
         })
     }
 

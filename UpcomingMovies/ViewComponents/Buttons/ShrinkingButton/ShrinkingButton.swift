@@ -11,6 +11,10 @@ import UIKit
 @IBDesignable
 final class ShrinkingButton: UIButton {
 
+    private var pendingReverts: [UUID: Task<Void, Never>] = [:]
+
+    deinit { pendingReverts.values.forEach { $0.cancel() } }
+
     @IBInspectable var spinnerColor: UIColor = UIColor.white {
         didSet {
             spiner.spinnerColor = spinnerColor
@@ -138,7 +142,12 @@ final class ShrinkingButton: UIButton {
         // Delay should have a minimum value
         let delayToRevert = max(delay, 0.2)
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + delayToRevert) {
+        let id = UUID()
+        pendingReverts[id] = Task { @MainActor [weak self] in
+            do { try await Task.sleep(nanoseconds: UInt64(delayToRevert * 1_000_000_000)) }
+            catch { return }
+            guard let self else { return }
+            self.pendingReverts[id] = nil
             self.setOriginalState { [weak self] in
                 self?.layer.removeAllAnimations()
                 completion?()

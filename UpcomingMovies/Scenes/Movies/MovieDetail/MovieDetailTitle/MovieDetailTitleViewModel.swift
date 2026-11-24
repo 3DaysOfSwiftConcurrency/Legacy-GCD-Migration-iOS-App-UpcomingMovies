@@ -27,6 +27,9 @@ final class MovieDetailTitleViewModel: MovieDetailTitleViewModelProtocol {
     let showSubtitle = BehaviorBindable<String?>(nil).eraseToAnyBindable()
     let showGenresNames = BehaviorBindable<String?>(nil).eraseToAnyBindable()
 
+    private var genreTask: Task<Void, Never>?
+    deinit { genreTask?.cancel() }
+
     private let interactor: MovieDetailInteractorProtocol
 
     init(_ renderContent: MovieDetailTitleRenderContent?, interactor: MovieDetailInteractorProtocol) {
@@ -45,11 +48,11 @@ final class MovieDetailTitleViewModel: MovieDetailTitleViewModelProtocol {
     }
 
     private func getMoviesGenresNames(for genreIds: [Int]) {
-        interactor.findGenres(for: genreIds, completion: { [weak self] result in
-            guard let self = self else { return }
-            let genres = result.wrappedValue
-            self.showGenresNames.value = genres?.compactMap { $0.name }.joined(separator: " • ")
-        })
+        genreTask = Task { @MainActor [weak self, interactor] in
+            let genres = await interactor.findGenres(for: genreIds)
+            guard !Task.isCancelled else { return }
+            self?.showGenresNames.value = genres.compactMap { $0.name }.joined(separator: " • ")
+        }
     }
 
 }

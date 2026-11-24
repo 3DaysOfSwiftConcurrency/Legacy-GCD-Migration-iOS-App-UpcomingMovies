@@ -21,12 +21,15 @@ struct SplashInteractor: SplashInteractorProtocol {
 
     // MARK: - SplashInteractorProtocol
 
-    func getAppConfiguration(completion: @escaping (Result<Configuration, Error>) -> Void) {
-        configurationUseCase.getConfiguration(completion: completion)
+    func appConfiguration() async -> Configuration? {
+        await withCheckedContinuation { continuation in
+            configurationUseCase.getConfiguration { continuation.resume(returning: $0.wrappedValue) }
+        }
     }
 
-    func getAllGenres(completion: @escaping (Result<[Genre], Error>) -> Void) {
-        genreUseCase.fetchAll(completion: completion, forceRefresh: false)
+    func allGenres() async -> [Genre]? {
+        await withCheckedContinuation { continuation in
+            genreUseCase.fetchAll(completion: { continuation.resume(returning: $0.wrappedValue) }, forceRefresh: false)
+        }
     }
-
 }

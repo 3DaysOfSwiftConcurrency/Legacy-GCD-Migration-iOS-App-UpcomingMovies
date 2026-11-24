@@ -37,20 +37,17 @@ final class MovieDetailInteractor: MovieDetailInteractorProtocol {
         genreUseCase.find(with: id, completion: completion)
     }
 
-    func findGenres(for identifiers: [Int], completion: @escaping (Result<[Genre], Error>) -> Void) {
-        let dispatchGroup = DispatchGroup()
+    @MainActor
+    func findGenres(for identifiers: [Int]) async -> [Genre] {
         var genres: [Genre] = []
-
         for id in identifiers {
-            dispatchGroup.enter()
-            findGenre(with: id) { result in
-                if let genre = try? result.get() { genres.append(genre) }
-                dispatchGroup.leave()
+            guard !Task.isCancelled else { break }
+            let result = await withCheckedContinuation { continuation in
+                findGenre(with: id) { continuation.resume(returning: $0) }
             }
+            if let genre = try? result.get() { genres.append(genre) }
         }
-        dispatchGroup.notify(queue: .global(qos: .userInitiated)) {
-            completion(.success(genres))
-        }
+        return genres
     }
 
     func getMovieDetail(for movieId: Int, completion: @escaping (Result<MovieProtocol, Error>) -> Void) {

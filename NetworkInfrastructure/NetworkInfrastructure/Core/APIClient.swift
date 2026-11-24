@@ -52,7 +52,7 @@ extension APIClient {
                              decode: @escaping (Decodable) -> T?,
                              completion: @escaping (Result<T, APIError>) -> Void) {
         let task = decodingTask(with: request, decodingType: T.self) { result in
-            DispatchQueue.main.async {
+            let deliver = {
                 switch result {
                 case .success(let json):
                     if let value = decode(json) {
@@ -63,6 +63,14 @@ extension APIClient {
                 case .failure(let error):
                     completion(.failure(error))
                 }
+            }
+
+            // The request owns one terminal delivery, even if its caller has gone away.
+            if #available(iOS 13.0, *) {
+                Task { @MainActor in deliver() }
+            } else {
+                // This framework still supports iOS 12, before Swift Concurrency.
+                RunLoop.main.perform(inModes: [.common], block: deliver)
             }
         }
         task.resume()

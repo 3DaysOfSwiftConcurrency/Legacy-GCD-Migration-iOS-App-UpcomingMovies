@@ -20,14 +20,14 @@ protocol LoadingDisplayable: AnyObject {
 extension LoadingDisplayable {
 
     func showLoader(in view: UIView) {
-        DispatchQueue.main.async {
+        BindingDelivery.main.send {
             self.loaderView.show(in: view, animated: false, completion: nil)
             self.loaderView.startLoading()
         }
     }
 
     func hideLoader() {
-        DispatchQueue.main.async {
+        BindingDelivery.main.send {
             self.loaderView.hide(animated: true, completion: { _ in
                 self.loaderView.stopLoading()
             })

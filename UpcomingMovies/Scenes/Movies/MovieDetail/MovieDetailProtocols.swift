@@ -64,7 +64,7 @@ protocol MovieDetailInteractorProtocol {
     func isUserSignedIn() -> Bool
 
     func findGenre(with id: Int, completion: @escaping (Result<Genre?, Error>) -> Void)
-    func findGenres(for identifiers: [Int], completion: @escaping (Result<[Genre], Error>) -> Void)
+    @MainActor func findGenres(for identifiers: [Int]) async -> [Genre]
 
     func getMovieDetail(for movieId: Int, completion: @escaping (Result<MovieProtocol, Error>) -> Void)
 
