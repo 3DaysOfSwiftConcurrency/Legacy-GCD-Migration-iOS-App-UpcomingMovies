@@ -59,7 +59,8 @@ final class AppModel {
         let auth = provider.authUseCase()
 
         return AppModel(
-            upcomingMoviesFeature: UpcomingMoviesFeature(movieUseCase: movies, genreHandler: genres),
+            upcomingMoviesFeature: UpcomingMoviesFeature(movieUseCase: movies, genreHandler: genres,
+                                                         preferences: DefaultsPresentationModeRepository()),
             searchMoviesFeature: SearchMoviesFeature(movieUseCase: movies,
                                                      movieSearchUseCase: provider.movieSearchUseCase(),
                                                      movieVisitUseCase: provider.movieVisitUseCase(),

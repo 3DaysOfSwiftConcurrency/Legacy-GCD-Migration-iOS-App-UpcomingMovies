@@ -14,6 +14,7 @@ final class UpcomingMoviesFeatureTests: XCTestCase {
         var loadCallCount = 0
         let expectedMovie = makeMovie(id: 1)
         let upcomingMoviesFeature = UpcomingMoviesFeature(
+            preferences: MockUserPreferencesHandler(),
             loadUpcomingMovies: { _, completion in
                 loadCallCount += 1
                 completion(.success([expectedMovie]))

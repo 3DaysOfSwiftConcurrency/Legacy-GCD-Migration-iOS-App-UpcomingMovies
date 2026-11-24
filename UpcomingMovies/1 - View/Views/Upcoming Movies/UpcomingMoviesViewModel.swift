@@ -15,7 +15,6 @@ final class UpcomingMoviesViewModel: UpcomingMoviesViewModelProtocol, SimpleView
 
     private let upcomingMoviesFeature: UpcomingMoviesFeature
     private let factory: UpcomingMoviesFactoryProtocol
-    private let userPreferencesHandler: UserPreferencesHandlerProtocol
     private var loadTasks: [Int: Task<Void, Never>] = [:]
 
     // MARK: - Reactive properties
@@ -39,17 +38,15 @@ final class UpcomingMoviesViewModel: UpcomingMoviesViewModelProtocol, SimpleView
     }
 
     var currentPresentationMode: UpcomingMoviesPresentationMode {
-        userPreferencesHandler.upcomingMoviesPresentationMode
+        upcomingMoviesFeature.presentationMode
     }
 
     // MARK: - Initializers
 
     init(upcomingMoviesFeature: UpcomingMoviesFeature,
-         factory: UpcomingMoviesFactoryProtocol,
-         userPreferencesHandler: UserPreferencesHandlerProtocol) {
+         factory: UpcomingMoviesFactoryProtocol) {
         self.upcomingMoviesFeature = upcomingMoviesFeature
         self.factory = factory
-        self.userPreferencesHandler = userPreferencesHandler
     }
 
     // MARK: - UpcomingMoviesViewModelProtocol
@@ -75,14 +72,7 @@ final class UpcomingMoviesViewModel: UpcomingMoviesViewModelProtocol, SimpleView
     }
 
     func updatePresentationMode() {
-        switch currentPresentationMode {
-        case .preview:
-            userPreferencesHandler.upcomingMoviesPresentationMode = .detail
-            didUpdatePresentationMode.send(.detail)
-        case .detail:
-            userPreferencesHandler.upcomingMoviesPresentationMode = .preview
-            didUpdatePresentationMode.send(.preview)
-        }
+        didUpdatePresentationMode.send(upcomingMoviesFeature.togglePresentationMode())
     }
 
     // MARK: - Private

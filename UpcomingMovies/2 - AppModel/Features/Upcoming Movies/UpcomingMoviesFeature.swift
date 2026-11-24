@@ -15,12 +15,14 @@ final class UpcomingMoviesFeature {
     typealias UpcomingMoviesLoader = (Int, @escaping (Result<[Movie], Error>) -> Void) -> Void
     typealias MoviePresentationModel = (Movie) -> MovieProtocol
 
+    private let preferences: PresentationModeRepository
     private let loadUpcomingMovies: UpcomingMoviesLoader
     private let makeMoviePresentationModel: MoviePresentationModel
     private var currentLoad: (page: Int, task: Task<[MovieProtocol], Error>)?
     private var latestRequestIdentifier = 0
 
-    init(movieUseCase: MovieUseCaseProtocol, genreHandler: GenreHandlerProtocol) {
+    init(movieUseCase: MovieUseCaseProtocol, genreHandler: GenreHandlerProtocol, preferences: PresentationModeRepository) {
+        self.preferences = preferences
         self.loadUpcomingMovies = { page, completion in
             movieUseCase.getUpcomingMovies(page: page, completion: completion)
         }
@@ -29,10 +31,26 @@ final class UpcomingMoviesFeature {
         }
     }
 
-    init(loadUpcomingMovies: @escaping UpcomingMoviesLoader,
+    init(preferences: PresentationModeRepository,
+         loadUpcomingMovies: @escaping UpcomingMoviesLoader,
          makeMoviePresentationModel: @escaping MoviePresentationModel) {
+        self.preferences = preferences
         self.loadUpcomingMovies = loadUpcomingMovies
         self.makeMoviePresentationModel = makeMoviePresentationModel
+    }
+
+    var presentationMode: UpcomingMoviesPresentationMode {
+        preferences.upcomingMoviesPresentationMode
+    }
+
+    func togglePresentationMode() -> UpcomingMoviesPresentationMode {
+        let next: UpcomingMoviesPresentationMode
+        switch presentationMode {
+        case .preview: next = .detail
+        case .detail: next = .preview
+        }
+        preferences.upcomingMoviesPresentationMode = next
+        return next
     }
 
     func loadMovies(page: Int) async throws -> [MovieProtocol] {

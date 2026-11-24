@@ -28,6 +28,10 @@
     {
       "action": "Verified Establish the CFA composition root in the Modernizer session.",
       "result": "Host build and tests passed for UpcomingMovies on iPhone 17 Pro."
+    },
+    {
+      "action": "Verified Migrate one complete feature slice at a time in the Modernizer session.",
+      "result": "Host build and tests passed for UpcomingMovies on iPhone 17 Pro."
     }
   ],
   "blocker": null,

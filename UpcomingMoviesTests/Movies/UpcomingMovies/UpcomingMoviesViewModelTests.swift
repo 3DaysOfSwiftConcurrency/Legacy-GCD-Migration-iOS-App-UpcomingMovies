@@ -23,20 +23,28 @@ final class UpcomingMoviesViewModelTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         mockMoviesLoader = MockUpcomingMoviesLoader()
-        let upcomingMoviesFeature = UpcomingMoviesFeature(loadUpcomingMovies: { page, completion in
+        let upcomingMoviesFeature = UpcomingMoviesFeature(preferences: mockUserPreferencesHandler, loadUpcomingMovies: { page, completion in
             self.mockMoviesLoader.loadMovies(page: page, completion: completion)
         }, makeMoviePresentationModel: { movie in
             MockMovieProtocol(id: movie.id)
         })
         viewModelToTest = UpcomingMoviesViewModel(upcomingMoviesFeature: upcomingMoviesFeature,
-                                                  factory: mockFactory,
-                                                  userPreferencesHandler: mockUserPreferencesHandler)
+                                                  factory: mockFactory)
     }
 
     override func tearDownWithError() throws {
         mockMoviesLoader = nil
         viewModelToTest = nil
         try super.tearDownWithError()
+    }
+
+    func testToggleUsesStoredModeAndPersistsBothTransitions() {
+        mockUserPreferencesHandler.upcomingMoviesPresentationMode = .detail
+        XCTAssertEqual(viewModelToTest.currentPresentationMode, .detail)
+        viewModelToTest.updatePresentationMode()
+        XCTAssertEqual(mockUserPreferencesHandler.upcomingMoviesPresentationMode, .preview)
+        viewModelToTest.updatePresentationMode()
+        XCTAssertEqual(mockUserPreferencesHandler.upcomingMoviesPresentationMode, .detail)
     }
 
     func testGetMoviesEmpty() async {

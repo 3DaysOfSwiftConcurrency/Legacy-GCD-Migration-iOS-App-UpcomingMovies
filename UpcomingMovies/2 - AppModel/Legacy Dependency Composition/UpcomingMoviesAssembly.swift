@@ -21,13 +21,9 @@ final class UpcomingMoviesAssembly: Assembly {
             guard let factory = resolver.resolve(UpcomingMoviesFactoryProtocol.self) else {
                 fatalError("UpcomingMoviesFactoryProtocol dependency could not be resolved")
             }
-            guard let userPreferencesHandler = resolver.resolve(UserPreferencesHandlerProtocol.self) else {
-                fatalError("UserPreferencesHandlerProtocol dependency could not be resolved")
-            }
             return MainActor.assumeIsolated {
                 UpcomingMoviesViewModel(upcomingMoviesFeature: AppModel.shared.upcomingMoviesFeature,
-                                        factory: factory,
-                                        userPreferencesHandler: userPreferencesHandler)
+                                        factory: factory)
             }
         }
 

@@ -1,5 +1,5 @@
 //
-//  UserPreferencesHandler.swift
+//  DefaultsPresentationModeRepository.swift
 //  UpcomingMovies
 //
 //  Created by Alonso on 7/02/23.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class UserPreferencesHandler: UserPreferencesHandlerProtocol {
+final class DefaultsPresentationModeRepository: PresentationModeRepository {
 
     @UserDefaultsStorage(key: "UpcomingMoviesPresentationMode", defaultValue: 0)
     private var upcomingMoviesPresentationModeRawValue: Int
