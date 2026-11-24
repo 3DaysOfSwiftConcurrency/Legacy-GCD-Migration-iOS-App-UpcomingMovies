@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 protocol CustomListsViewModelProtocol {
 
     var startLoading: AnyBehaviorBindable<Bool> { get }

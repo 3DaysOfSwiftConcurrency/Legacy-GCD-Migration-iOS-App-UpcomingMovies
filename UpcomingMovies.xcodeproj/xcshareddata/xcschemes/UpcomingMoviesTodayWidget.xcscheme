@@ -15,9 +15,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E2B63B0D24676AE200C0BB13"
-               BuildableName = "RecentlyVisited.appex"
-               BlueprintName = "UpcomingMoviesTodayExtension"
+               BlueprintIdentifier = "E2EBDC28256A26060026319B"
+               BuildableName = "UpcomingMoviesWidgetExtension.appex"
+               BlueprintName = "UpcomingMoviesWidgetExtension"
                ReferencedContainer = "container:UpcomingMovies.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>

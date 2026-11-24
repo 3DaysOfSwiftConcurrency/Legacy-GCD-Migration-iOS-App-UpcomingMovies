@@ -20,9 +20,11 @@ final class ProfileAssembly: Assembly {
             guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
                 fatalError("UseCaseProviderProtocol dependency could not be resolved")
             }
-            return ProfileFeature(userUseCase: useCaseProvider.userUseCase(),
-                                     authUseCase: useCaseProvider.authUseCase(),
-                                     accountUseCase: useCaseProvider.accountUseCase())
+            return MainActor.assumeIsolated {
+                ProfileFeature(userUseCase: useCaseProvider.userUseCase(),
+                                  authUseCase: useCaseProvider.authUseCase(),
+                                  accountUseCase: useCaseProvider.accountUseCase())
+            }
         }
 
         container.register(ProfileViewModelProtocol.self) { (resolver, user: UserProtocol) in
@@ -32,9 +34,11 @@ final class ProfileAssembly: Assembly {
             guard let factory = resolver.resolve(ProfileFactoryProtocol.self) else {
                 fatalError("ProfileFactoryProtocol dependency could not be resolved")
             }
-            return ProfileViewModel(userAccount: user,
-                                    profileFeature: profileFeature,
-                                    factory: factory)
+            return MainActor.assumeIsolated {
+                ProfileViewModel(userAccount: user,
+                                 profileFeature: profileFeature,
+                                 factory: factory)
+            }
         }
     }
 

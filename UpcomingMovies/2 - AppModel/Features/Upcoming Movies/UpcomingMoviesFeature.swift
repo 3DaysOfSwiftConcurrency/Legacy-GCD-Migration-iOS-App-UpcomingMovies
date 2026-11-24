@@ -17,7 +17,7 @@ final class UpcomingMoviesFeature {
 
     private let loadUpcomingMovies: UpcomingMoviesLoader
     private let makeMoviePresentationModel: MoviePresentationModel
-    private var inFlightLoadTasks: [Int: Task<[MovieProtocol], Error>] = [:]
+    private var currentLoad: (page: Int, task: Task<[MovieProtocol], Error>)?
     private var latestRequestIdentifier = 0
 
     init(movieUseCase: MovieUseCaseProtocol, genreHandler: GenreHandlerProtocol) {
@@ -39,13 +39,11 @@ final class UpcomingMoviesFeature {
         // A pull-to-refresh is more relevant than an earlier prefetch. The network
         // requests may finish in either order, but only the newest request is
         // allowed to publish a result to the screen.
-        latestRequestIdentifier += 1
-        let requestIdentifier = latestRequestIdentifier
-
         let loadTask: Task<[MovieProtocol], Error>
-        if let inFlightLoadTask = inFlightLoadTasks[page] {
-            loadTask = inFlightLoadTask
+        if let currentLoad, currentLoad.page == page {
+            loadTask = currentLoad.task
         } else {
+            latestRequestIdentifier += 1
             let loadUpcomingMovies = self.loadUpcomingMovies
             let makeMoviePresentationModel = self.makeMoviePresentationModel
             loadTask = Task {
@@ -56,11 +54,14 @@ final class UpcomingMoviesFeature {
                 }
                 return domainMovies.map(makeMoviePresentationModel)
             }
-            inFlightLoadTasks[page] = loadTask
+            currentLoad = (page, loadTask)
         }
 
+        let requestIdentifier = latestRequestIdentifier
         defer {
-            inFlightLoadTasks[page] = nil
+            if requestIdentifier == latestRequestIdentifier {
+                currentLoad = nil
+            }
         }
 
         let movies = try await loadTask.value

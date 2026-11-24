@@ -8,7 +8,7 @@
 
 import Foundation
 @testable import UpcomingMovies
-import UpcomingMoviesDomain
+@testable import UpcomingMoviesDomain
 
 final class SearchMoviesUseCaseMock: MovieSearchUseCaseProtocol {
 
@@ -67,6 +67,7 @@ final class SearchMoviesFeatureTestDependencies {
     let movieVisitUseCase = SearchMovieVisitsUseCaseMock()
     let genreUseCase = GenreUseCaseProtocolMock()
 
+    @MainActor
     func makeFeature() -> SearchMoviesFeature {
         SearchMoviesFeature(
             movieUseCase: movieUseCase,

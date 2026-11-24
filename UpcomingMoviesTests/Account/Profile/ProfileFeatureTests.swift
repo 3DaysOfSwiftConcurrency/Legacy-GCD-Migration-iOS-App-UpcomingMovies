@@ -50,8 +50,10 @@ final class ProfileFeatureTests: XCTestCase {
         XCTAssertEqual(mockUserUseCase.saveUserCallCount, 0)
     }
 
-    func testSignOutRequestsTheUseCase() async {
-        _ = try? await profileFeature.signOut()
+    func testSignOutRequestsTheUseCase() async throws {
+        mockAuthUseCase.signOutUserResult = .success(true)
+        let signedOut = try await profileFeature.signOut()
+        XCTAssertTrue(signedOut)
         XCTAssertEqual(mockAuthUseCase.signOutUserCallCount, 1)
     }
 

@@ -28,7 +28,7 @@ final class AccountFeatureTests: XCTestCase {
         let expectedUser = MockUserProtocol()
         authenticationHandler.currentUserResult = expectedUser
 
-        XCTAssertTrue(accountFeature.currentUser() === expectedUser)
+        XCTAssertTrue((accountFeature.currentUser() as? MockUserProtocol) === expectedUser)
     }
 
     func testCurrentUserReturnsNilWhenNoUserIsSignedIn() {

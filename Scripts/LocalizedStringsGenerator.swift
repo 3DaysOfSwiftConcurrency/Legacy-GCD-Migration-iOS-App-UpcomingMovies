@@ -2,11 +2,12 @@ import Foundation
 
 @main
 public struct LocalizedStringsGenerator {
-    static func main() {
-        createLocalizedStringsFile(filePath: CommandLine.arguments[1], stringsFileName: CommandLine.arguments[2])
+    static func main() throws {
+        try createLocalizedStringsFile(filePath: CommandLine.arguments[1], stringsFile: URL(fileURLWithPath: CommandLine.arguments[2]))
     }
 
-    private static func createLocalizedStringsFile(filePath: String, stringsFileName: String) {
+    private static func createLocalizedStringsFile(filePath: String, stringsFile: URL) throws {
+        let stringsFileName = stringsFile.deletingPathExtension().lastPathComponent
         let fileContentString =
         """
         //
@@ -19,54 +20,26 @@ public struct LocalizedStringsGenerator {
 
         \(stringExtension)
 
-        \(localizedStringsEnum(stringsFileName))
+        \(try localizedStringsEnum(stringsFile))
         
         """
 
-        do {
-            try fileContentString.write(toFile: filePath, atomically: true, encoding: .utf8)
-            print("LocalizedStrings file successfully generated:\n \(filePath)\n")
-        } catch {
-            print(error)
-        }
+        try fileContentString.write(toFile: filePath, atomically: true, encoding: .utf8)
     }
 
-    private static func localizedStringsEnum(_ stringsFileName: String) -> String {
-        guard let localizableStringsFileURL = findPath(for: stringsFileName) else { return "" }
-        do {
-            let data = try String(contentsOfFile: localizableStringsFileURL.path, encoding: .utf8)
-            let stringsLine = data.components(separatedBy: .newlines).filter { $0.contains(";") && $0.contains("=") }
-            let stringsKeys = stringsLine
-                .compactMap { $0.split(separator: "=").first }
-                .map { $0?.replacingOccurrences(of: " ", with: "") }
-                .map { $0?.replacingOccurrences(of: "\"", with: "") }
-            let enumCases = stringsKeys.compactMap { $0 }.map { "case \($0)" }
-            return """
-                enum LocalizedStrings: String, Localizable {
-                    \(enumCases.joined(separator: "\n\t"))
-                }
-                """
-        } catch {
-            print("Error: \(error)")
-        }
-        return ""
-    }
-
-    private static func findPath(for stringsFileName: String) -> URL? {
-        let url = URL(fileURLWithPath: Bundle.main.bundlePath)
-        var files = [URL]()
-        guard let enumerator = FileManager.default.enumerator(at: url, includingPropertiesForKeys: [.isRegularFileKey], options: [.skipsHiddenFiles, .skipsPackageDescendants]) else {
-            return nil
-        }
-        for case let fileURL as URL in enumerator {
-            do {
-                let fileAttributes = try fileURL.resourceValues(forKeys: [.isRegularFileKey])
-                if fileAttributes.isRegularFile == true, fileURL.lastPathComponent.contains(stringsFileName) {
-                    files.append(fileURL)
-                }
-            } catch { print(error, fileURL) }
-        }
-        return files.first
+    private static func localizedStringsEnum(_ stringsFile: URL) throws -> String {
+        let data = try String(contentsOf: stringsFile, encoding: .utf8)
+        let stringsLine = data.components(separatedBy: .newlines).filter { $0.contains(";") && $0.contains("=") }
+        let stringsKeys = stringsLine
+            .compactMap { $0.split(separator: "=").first }
+            .map { $0?.replacingOccurrences(of: " ", with: "") }
+            .map { $0?.replacingOccurrences(of: "\"", with: "") }
+        let enumCases = stringsKeys.compactMap { $0 }.map { "case \($0)" }
+        return """
+            enum LocalizedStrings: String, Localizable {
+                \(enumCases.joined(separator: "\n\t"))
+            }
+            """
     }
 
     // MARK: - Utils

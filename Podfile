@@ -28,6 +28,15 @@ target 'UpcomingMovies' do
   end
 
   post_install do |pi|
+    # Kingfisher 7.6.1 has a setter modifier rejected by newer Swift parsers.
+    manager = pi.sandbox.root + 'Kingfisher/Sources/General/KingfisherManager.swift'
+    source = manager.read
+    corrected = source.sub('private (set) var state:', 'private(set) var state:')
+    if corrected != source
+      manager.chmod(manager.stat.mode | 0o200)
+      manager.write(corrected)
+    end
+
     pi.pods_project.targets.each do |t|
       t.build_configurations.each do |config|
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = deployment_target

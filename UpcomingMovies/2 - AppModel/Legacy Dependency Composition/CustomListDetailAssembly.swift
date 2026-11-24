@@ -16,14 +16,18 @@ final class CustomListDetailAssembly: Assembly {
             guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
                 fatalError("UseCaseProviderProtocol dependency could not be resolved")
             }
-            return CustomListDetailFeature(accountUseCase: useCaseProvider.accountUseCase())
+            return MainActor.assumeIsolated {
+                CustomListDetailFeature(accountUseCase: useCaseProvider.accountUseCase())
+            }
         }
 
         container.register(CustomListDetailViewModelProtocol.self) { (resolver, list: ListProtocol) in
             guard let customListDetailFeature = resolver.resolve(CustomListDetailFeature.self) else {
                 fatalError("CustomListDetailFeature dependency could not be resolved")
             }
-            return CustomListDetailViewModel(list, customListDetailFeature: customListDetailFeature)
+            return MainActor.assumeIsolated {
+                CustomListDetailViewModel(list, customListDetailFeature: customListDetailFeature)
+            }
         }
     }
 

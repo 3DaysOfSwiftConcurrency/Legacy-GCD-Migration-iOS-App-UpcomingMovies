@@ -21,25 +21,31 @@ final class SearchMoviesAssembly: Assembly {
                 fatalError("AuthenticationHandlerProtocol dependency could not be resolved")
             }
 
-            return SearchMoviesFeature(
-                movieUseCase: useCaseProvider.movieUseCase(),
-                movieSearchUseCase: useCaseProvider.movieSearchUseCase(),
-                movieVisitUseCase: useCaseProvider.movieVisitUseCase(),
-                genreUseCase: useCaseProvider.genreUseCase(),
-                authenticationHandler: authenticationHandler
-            )
+            return MainActor.assumeIsolated {
+                SearchMoviesFeature(
+                    movieUseCase: useCaseProvider.movieUseCase(),
+                    movieSearchUseCase: useCaseProvider.movieSearchUseCase(),
+                    movieVisitUseCase: useCaseProvider.movieVisitUseCase(),
+                    genreUseCase: useCaseProvider.genreUseCase(),
+                    authenticationHandler: authenticationHandler
+                )
+            }
         }
         container.register(SearchOptionsViewModelProtocol.self) { resolver in
             guard let searchMoviesFeature = resolver.resolve(SearchMoviesFeature.self) else {
                 fatalError("SearchMoviesFeature dependency could not be resolved")
             }
-            return SearchOptionsViewModel(searchMoviesFeature: searchMoviesFeature)
+            return MainActor.assumeIsolated {
+                SearchOptionsViewModel(searchMoviesFeature: searchMoviesFeature)
+            }
         }
         container.register(SearchMoviesResultViewModelProtocol.self) { resolver in
             guard let searchMoviesFeature = resolver.resolve(SearchMoviesFeature.self) else {
                 fatalError("SearchMoviesFeature dependency could not be resolved")
             }
-            return SearchMoviesResultViewModel(searchMoviesFeature: searchMoviesFeature)
+            return MainActor.assumeIsolated {
+                SearchMoviesResultViewModel(searchMoviesFeature: searchMoviesFeature)
+            }
         }
     }
 

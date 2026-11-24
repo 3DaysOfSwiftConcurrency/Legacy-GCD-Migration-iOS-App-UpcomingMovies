@@ -10,6 +10,7 @@ import XCTest
 @testable import UpcomingMovies
 import UpcomingMoviesDomain
 
+@MainActor
 final class MovieReviewsViewModelTests: XCTestCase {
 
     typealias MovieReviewsState = SimpleViewState<ReviewProtocol>
@@ -58,22 +59,26 @@ final class MovieReviewsViewModelTests: XCTestCase {
         wait(for: [expectation], timeout: 1.0)
     }
 
-    func testGetReviewsPopulated() {
+    func testGetReviewsPopulated() async {
         // Arrange
         let reviewsToTest = [MockReviewProtocol(id: "1"), MockReviewProtocol(id: "2")]
-        let expectation = XCTestExpectation(description: "Should get populated state")
-        var statesToReceive: [MovieReviewsState] = [.paging(reviewsToTest, next: 2), .populated(reviewsToTest)]
-        // Act
+        let firstPage = expectation(description: "First page received")
         viewModelToTest.viewState.bind { state in
-            XCTAssertEqual(state, statesToReceive.removeFirst())
-            expectation.fulfill()
+            XCTAssertEqual(state, .paging(reviewsToTest, next: 2))
+            firstPage.fulfill()
         }
-        mockInteractor.getMovieReviewsResult = Result.success(reviewsToTest)
+        mockInteractor.getMovieReviewsResult = .success(reviewsToTest)
         viewModelToTest.getMovieReviews()
-        mockInteractor.getMovieReviewsResult = Result.success([])
+        await fulfillment(of: [firstPage], timeout: 1.0)
+
+        let finalPage = expectation(description: "Reviews populated after empty next page")
+        viewModelToTest.viewState.bind { state in
+            XCTAssertEqual(state, .populated(reviewsToTest))
+            finalPage.fulfill()
+        }
+        mockInteractor.getMovieReviewsResult = .success([])
         viewModelToTest.getMovieReviews()
-        // Assert
-        wait(for: [expectation], timeout: 1.0)
+        await fulfillment(of: [finalPage], timeout: 1.0)
     }
 
     func testGetReviewsPaging() {

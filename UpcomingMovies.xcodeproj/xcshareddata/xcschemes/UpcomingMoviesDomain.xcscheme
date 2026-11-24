@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E229A55F236BF44E006FF112"
+               BlueprintIdentifier = "DA4B8AC2E03170689FB540A400E43C8E"
                BuildableName = "UpcomingMoviesDomain.framework"
                BlueprintName = "UpcomingMoviesDomain"
-               ReferencedContainer = "container:UpcomingMovies.xcodeproj">
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E229A567236BF44E006FF112"
-               BuildableName = "UpcomingMoviesDomainTests.xctest"
-               BlueprintName = "UpcomingMoviesDomainTests"
-               ReferencedContainer = "container:UpcomingMovies.xcodeproj">
+               BlueprintIdentifier = "F6EF6BBFAD94833A92B0A3E15B5638BA"
+               BuildableName = "UpcomingMoviesDomain-Unit-UpcomingMoviesDomainTests.xctest"
+               BlueprintName = "UpcomingMoviesDomain-Unit-UpcomingMoviesDomainTests"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -60,10 +60,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "E229A55F236BF44E006FF112"
+            BlueprintIdentifier = "DA4B8AC2E03170689FB540A400E43C8E"
             BuildableName = "UpcomingMoviesDomain.framework"
             BlueprintName = "UpcomingMoviesDomain"
-            ReferencedContainer = "container:UpcomingMovies.xcodeproj">
+            ReferencedContainer = "container:Pods/Pods.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

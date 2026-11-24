@@ -99,7 +99,7 @@ final class MovieCreditsViewModelTests: XCTestCase {
         XCTAssertEqual(numberOfSections, sectionsToTest.count)
     }
 
-    func testNumberOfItemsCastSection() {
+    func testNumberOfItemsCastSection() async {
         // Arrange
         let sectionsToTest: [MovieCreditsCollapsibleSection] = [
             MovieCreditsCollapsibleSection(type: .cast, opened: true),
@@ -111,13 +111,18 @@ final class MovieCreditsViewModelTests: XCTestCase {
         let crewToTest = [Crew.with()]
         mockMovieUseCase.getMovieCreditsResult = .success(.with(cast: castToTest, crew: crewToTest))
         // Act
+        let loaded = expectation(description: "Credits populated")
+        viewModelToTest.viewState.bind { state in
+            if case .populated = state { loaded.fulfill() }
+        }
         viewModelToTest.getMovieCredits(showLoader: false)
+        await fulfillment(of: [loaded], timeout: 1.0)
         let numberOfItems = viewModelToTest.numberOfItems(for: 0)
         // Assert
         XCTAssertEqual(numberOfItems, castToTest.count)
     }
 
-    func testNumberOfItemsCrewSection() {
+    func testNumberOfItemsCrewSection() async {
         // Arrange
         let sectionsToTest: [MovieCreditsCollapsibleSection] = [
             MovieCreditsCollapsibleSection(type: .cast, opened: true),
@@ -129,7 +134,12 @@ final class MovieCreditsViewModelTests: XCTestCase {
         let crewToTest = [Crew.with()]
         mockMovieUseCase.getMovieCreditsResult = .success(.with(cast: castToTest, crew: crewToTest))
         // Act
+        let loaded = expectation(description: "Credits populated")
+        viewModelToTest.viewState.bind { state in
+            if case .populated = state { loaded.fulfill() }
+        }
         viewModelToTest.getMovieCredits(showLoader: false)
+        await fulfillment(of: [loaded], timeout: 1.0)
         let numberOfItems = viewModelToTest.numberOfItems(for: 1)
         // Assert
         XCTAssertEqual(numberOfItems, crewToTest.count)

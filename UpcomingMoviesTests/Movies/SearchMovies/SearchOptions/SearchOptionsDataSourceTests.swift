@@ -9,6 +9,7 @@
 import XCTest
 @testable import UpcomingMovies
 
+@MainActor
 final class SearchOptionsDataSourceTests: XCTestCase {
 
     private var dataSource: SearchOptionsDataSource!

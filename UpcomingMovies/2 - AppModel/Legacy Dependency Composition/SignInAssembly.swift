@@ -16,14 +16,18 @@ final class SignInAssembly: Assembly {
             guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
                 fatalError("UseCaseProviderProtocol dependency could not be resolved")
             }
-            return SignInFeature(authUseCase: useCaseProvider.authUseCase(), userUseCase: useCaseProvider.userUseCase())
+            return MainActor.assumeIsolated {
+                SignInFeature(authUseCase: useCaseProvider.authUseCase(), userUseCase: useCaseProvider.userUseCase())
+            }
         }
 
         container.register(SignInViewModelProtocol.self) { resolver in
             guard let signInFeature = resolver.resolve(SignInFeature.self) else {
                 fatalError("SignInFeature dependency could not be resolved")
             }
-            return SignInViewModel(signInFeature: signInFeature)
+            return MainActor.assumeIsolated {
+                SignInViewModel(signInFeature: signInFeature)
+            }
         }
     }
 

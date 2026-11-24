@@ -23,6 +23,7 @@ protocol SearchMoviesCoordinatorProtocol: AnyObject, MovieDetailCoordinable {
 
 // MARK: - Search movies result
 
+@MainActor
 protocol SearchMoviesResultViewModelProtocol {
 
     var viewState: AnyBehaviorBindable<SearchMoviesResultViewState> { get }
@@ -47,6 +48,7 @@ protocol SearchMoviesResultViewModelProtocol {
 
 // MARK: - Search options
 
+@MainActor
 protocol SearchOptionsViewModelProtocol {
 
     var viewState: BehaviorBindable<SearchOptionsViewState> { get }

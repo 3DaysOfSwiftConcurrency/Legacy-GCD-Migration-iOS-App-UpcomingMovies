@@ -8,6 +8,7 @@
 
 import UIKit
 
+@MainActor
 protocol RecentlyVisitedMoviesTableViewCellDelegate: AnyObject {
 
     func recentlyVisitedMoviesTableViewCell(_ recentlyVisitedMoviesTableViewCell: RecentlyVisitedMoviesTableViewCell,

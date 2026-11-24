@@ -9,6 +9,7 @@
 import XCTest
 @testable import UpcomingMovies
 
+@MainActor
 final class SearchOptionsViewControllerTests: XCTestCase {
 
     private var viewModel: MockSearchOptionsViewModel!

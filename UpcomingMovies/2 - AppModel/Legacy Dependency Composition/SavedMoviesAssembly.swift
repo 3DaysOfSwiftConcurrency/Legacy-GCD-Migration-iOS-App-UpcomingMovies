@@ -16,18 +16,22 @@ final class SavedMoviesAssembly: Assembly {
             guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
                 fatalError("UseCaseProviderProtocol dependency could not be resolved")
             }
-            return SavedMoviesFeature(accountUseCase: useCaseProvider.accountUseCase())
+            return MainActor.assumeIsolated {
+                SavedMoviesFeature(accountUseCase: useCaseProvider.accountUseCase())
+            }
         }
 
         container.register(SavedMoviesViewModelProtocol.self) { (resolver, displayTitle: String?) in
             guard let savedMoviesFeature = resolver.resolve(SavedMoviesFeature.self) else {
                 fatalError("SavedMoviesFeature dependency could not be resolved")
             }
-            let collection: SavedMoviesCollection = displayTitle == ProfileOption.watchlist.title ? .watchlist : .favorites
-            let viewModel = SavedMoviesViewModel(savedMoviesFeature: savedMoviesFeature, collection: collection)
-            viewModel.displayTitle = displayTitle
+            return MainActor.assumeIsolated {
+                let collection: SavedMoviesCollection = displayTitle == ProfileOption.watchlist.title ? .watchlist : .favorites
+                let viewModel = SavedMoviesViewModel(savedMoviesFeature: savedMoviesFeature, collection: collection)
+                viewModel.displayTitle = displayTitle
 
-            return viewModel
+                return viewModel
+            }
         }
     }
 

@@ -17,8 +17,8 @@ import UpcomingMoviesDomain
 final class SearchMoviesFeature {
 
     private let movieUseCase: MovieUseCaseProtocol
-    private let movieSearchUseCase: MovieSearchUseCaseProtocol
-    private let movieVisitUseCase: MovieVisitUseCaseProtocol
+    private var movieSearchUseCase: MovieSearchUseCaseProtocol
+    private var movieVisitUseCase: MovieVisitUseCaseProtocol
     private let genreUseCase: GenreUseCaseProtocol
     private let authenticationHandler: AuthenticationHandlerProtocol
 
@@ -44,13 +44,13 @@ final class SearchMoviesFeature {
         self.genreUseCase = genreUseCase
         self.authenticationHandler = authenticationHandler
 
-        movieSearchUseCase.didUpdateMovieSearch = { [weak self] in
+        self.movieSearchUseCase.didUpdateMovieSearch = { [weak self] in
             Task { @MainActor [weak self] in
                 self?.movieSearchesDidChange?()
             }
         }
 
-        movieVisitUseCase.didUpdateMovieVisit = { [weak self] in
+        self.movieVisitUseCase.didUpdateMovieVisit = { [weak self] in
             Task { @MainActor [weak self] in
                 self?.movieVisitsDidChange?()
             }

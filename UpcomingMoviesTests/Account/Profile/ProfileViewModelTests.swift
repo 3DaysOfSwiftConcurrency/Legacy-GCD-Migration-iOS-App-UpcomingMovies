@@ -50,7 +50,7 @@ final class ProfileViewModelTests: XCTestCase {
                                            profileFeature: profileFeature,
                                            factory: mockFactory)
 
-        let userToTest = MockUserProtocol(name: "Alonso")
+        let userToTest = User.with(id: 12345, name: "Alonso", username: "")
         let expectation = XCTestExpectation(description: "Reload account info")
         // Act
         viewModelToTest.reloadAccountInfo.bind { _ in
@@ -64,7 +64,7 @@ final class ProfileViewModelTests: XCTestCase {
 
     func testGetAccountDetailSuccessInfoNotReloaded() {
         // Arrange
-        let userToTest = MockUserProtocol()
+        let userToTest = User.with(id: 12345, name: "", username: "")
         let expectation = XCTestExpectation(description: "Should not reload account info")
         expectation.isInverted = true
         // Act

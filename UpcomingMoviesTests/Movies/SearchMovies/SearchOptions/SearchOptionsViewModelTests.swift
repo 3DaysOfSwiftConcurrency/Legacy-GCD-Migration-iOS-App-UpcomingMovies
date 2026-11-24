@@ -8,6 +8,7 @@
 
 import XCTest
 @testable import UpcomingMovies
+@testable import UpcomingMoviesDomain
 
 @MainActor
 final class SearchOptionsViewModelTests: XCTestCase {
@@ -57,7 +58,7 @@ final class SearchOptionsViewModelTests: XCTestCase {
         XCTAssertEqual(featureDependencies.movieVisitUseCase.getMovieVisitsCallCount, 1)
     }
 
-    func testLoadVisitedMoviesUpdate() {
+    func testLoadVisitedMoviesUpdate() async {
         // Arrange
         let movieVisitsToTest = [MovieVisit.with()]
         let expectation = XCTestExpectation(description: "Movie visit update should be called")
@@ -67,11 +68,11 @@ final class SearchOptionsViewModelTests: XCTestCase {
         }, on: nil)
 
         featureDependencies.movieVisitUseCase.movieVisitsResult = .success(movieVisitsToTest)
-        viewModel.loadVisitedMovies()
+        await viewModel.loadVisitedMovies().value
 
         featureDependencies.movieVisitUseCase.didUpdateMovieVisit?()
         // Assert
-        wait(for: [expectation], timeout: 1.0)
+        await fulfillment(of: [expectation], timeout: 1.0)
         XCTAssertEqual(featureDependencies.movieVisitUseCase.getMovieVisitsCallCount, 2)
     }
 

@@ -12,6 +12,7 @@ import UpcomingMoviesDomain
 final class UpcomingMoviesAssembly: Assembly {
 
     func assemble(container: Container) {
+        // The UIKit screen resolves these synchronous factories on the main actor.
         container.register(UpcomingMoviesFeature.self) { resolver in
             guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
                 fatalError("UseCaseProviderProtocol dependency could not be resolved")
@@ -19,8 +20,10 @@ final class UpcomingMoviesAssembly: Assembly {
             guard let genreHandler = resolver.resolve(GenreHandlerProtocol.self) else {
                 fatalError("GenreHandlerProtocol dependency could not be resolved")
             }
-            return UpcomingMoviesFeature(movieUseCase: useCaseProvider.movieUseCase(),
-                                         genreHandler: genreHandler)
+            return MainActor.assumeIsolated {
+                UpcomingMoviesFeature(movieUseCase: useCaseProvider.movieUseCase(),
+                                      genreHandler: genreHandler)
+            }
         }.inObjectScope(.container)
 
         container.register(UpcomingMoviesFactoryProtocol.self) { _ in
@@ -37,9 +40,11 @@ final class UpcomingMoviesAssembly: Assembly {
             guard let userPreferencesHandler = resolver.resolve(UserPreferencesHandlerProtocol.self) else {
                 fatalError("UserPreferencesHandlerProtocol dependency could not be resolved")
             }
-            return UpcomingMoviesViewModel(upcomingMoviesFeature: upcomingMoviesFeature,
-                                           factory: factory,
-                                           userPreferencesHandler: userPreferencesHandler)
+            return MainActor.assumeIsolated {
+                UpcomingMoviesViewModel(upcomingMoviesFeature: upcomingMoviesFeature,
+                                        factory: factory,
+                                        userPreferencesHandler: userPreferencesHandler)
+            }
         }
 
         container.register(UpcomingMoviesLayoutProviderProtocol.self) { _ in

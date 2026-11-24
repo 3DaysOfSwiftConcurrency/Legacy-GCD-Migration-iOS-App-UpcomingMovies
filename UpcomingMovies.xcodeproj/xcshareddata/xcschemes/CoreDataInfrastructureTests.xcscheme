@@ -16,10 +16,10 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E229A530236BF242006FF112"
-               BuildableName = "CoreDataInfrastructureTests.xctest"
-               BlueprintName = "CoreDataInfrastructureTests"
-               ReferencedContainer = "container:UpcomingMovies.xcodeproj">
+               BlueprintIdentifier = "D28CD528FF2629D7C73616BEC7DDDAF6"
+               BuildableName = "CoreDataInfrastructure-Unit-CoreDataInfrastructureTests.xctest"
+               BlueprintName = "CoreDataInfrastructure-Unit-CoreDataInfrastructureTests"
+               ReferencedContainer = "container:Pods/Pods.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>

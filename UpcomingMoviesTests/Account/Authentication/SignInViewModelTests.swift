@@ -8,7 +8,7 @@
 
 import XCTest
 @testable import UpcomingMovies
-import UpcomingMoviesDomain
+@testable import UpcomingMoviesDomain
 
 @MainActor
 final class SignInViewModelTests: XCTestCase {

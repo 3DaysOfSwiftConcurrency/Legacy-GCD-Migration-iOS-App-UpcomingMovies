@@ -21,7 +21,9 @@ final class MovieCreditsAssembly: Assembly {
             guard let useCaseProvider = resolver.resolve(UseCaseProviderProtocol.self) else {
                 fatalError("UseCaseProviderProtocol dependency could not be resolved")
             }
-            return MovieCreditsFeature(movieUseCase: useCaseProvider.movieUseCase())
+            return MainActor.assumeIsolated {
+                MovieCreditsFeature(movieUseCase: useCaseProvider.movieUseCase())
+            }
         }
 
         container.register(MovieCreditsViewModelProtocol.self) { (resolver, movieId: Int, movieTitle: String) in
@@ -31,8 +33,10 @@ final class MovieCreditsAssembly: Assembly {
             guard let movieCreditsFeature = resolver.resolve(MovieCreditsFeature.self) else {
                 fatalError("MovieCreditsFeature dependency could not be resolved")
             }
-            return MovieCreditsViewModel(movieId: movieId, movieTitle: movieTitle,
-                                         movieCreditsFeature: movieCreditsFeature, factory: factory)
+            return MainActor.assumeIsolated {
+                MovieCreditsViewModel(movieId: movieId, movieTitle: movieTitle,
+                                      movieCreditsFeature: movieCreditsFeature, factory: factory)
+            }
         }
     }
 
