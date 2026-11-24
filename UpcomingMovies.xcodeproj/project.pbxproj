@@ -1118,7 +1118,6 @@
 				E226C64821FF8A19004AA771 /* MovieDetailBackdropView.swift */,
 				E2864A3A24D6722700271EF0 /* FavoriteToggleBarButtonItem.swift */,
 			);
-			name = ViewComponents;
 			path = ViewComponents;
 			sourceTree = "<group>";
 		};
@@ -1131,7 +1130,6 @@
 				E265C25E2495391E00712284 /* SimilarMoviesInteractor.swift */,
 				E265C25C2495391400712284 /* PopularMoviesInteractor.swift */,
 			);
-			name = Interactors;
 			path = Interactors;
 			sourceTree = "<group>";
 		};
@@ -1141,7 +1139,6 @@
 				64795E619A02A9375F510B42 /* ToggleBarButtonItem */,
 				AC8C0929BD2209FE282B0DB2 /* ShrinkingButton */,
 			);
-			name = Buttons;
 			path = Buttons;
 			sourceTree = "<group>";
 		};
@@ -1152,7 +1149,6 @@
 				DA86BEAB70C716FC3E37B4A8 /* DeepLinkHandler */,
 				E297A765248C6C5700AC89B9 /* ImageTransitionHandler.swift */,
 			);
-			name = Handlers;
 			path = Handlers;
 			sourceTree = "<group>";
 		};
@@ -1171,7 +1167,6 @@
 				E2C14FF62C1956F40050236F /* ListProtocol.swift */,
 				E2C8FFC02C3F8B8A00EB983D /* GenreProtocol.swift */,
 			);
-			name = Models;
 			path = Models;
 			sourceTree = "<group>";
 		};
@@ -1180,7 +1175,6 @@
 			children = (
 				67D86F914A4DC6D42B4417E4 /* ProgressHUD */,
 			);
-			name = Adapters;
 			path = Adapters;
 			sourceTree = "<group>";
 		};
@@ -1194,7 +1188,6 @@
 				E26AB92F21F8C0ED00D9FEAA /* MovieListViewController.swift */,
 				E26AB93121F8C15800D9FEAA /* MovieListViewModel.swift */,
 			);
-			name = MovieList;
 			path = MovieList;
 			sourceTree = "<group>";
 		};
@@ -1205,7 +1198,6 @@
 				E2EB9239221375190067F011 /* CollectionViewDataSourcePrefetching.swift */,
 				E2EB923A221375190067F011 /* SectionedCollectionViewDataSource.swift */,
 			);
-			name = "CollectionView Data Sources";
 			path = "CollectionView Data Sources";
 			sourceTree = "<group>";
 		};
@@ -1217,7 +1209,6 @@
 				E2F9F7162201F3C300C62089 /* TransitioningInteractor.swift */,
 				E2F9F7212202787E00C62089 /* TransitioningAnimator.swift */,
 			);
-			name = Transitions;
 			path = Transitions;
 			sourceTree = "<group>";
 		};
@@ -1227,7 +1218,6 @@
 				E2E4452E22475533009ABDEA /* AuthenticationHandler.swift */,
 				E20118E025FF251E0091D248 /* AuthenticationHandlerProtocol.swift */,
 			);
-			name = AuthenticationHandler;
 			path = AuthenticationHandler;
 			sourceTree = "<group>";
 		};
@@ -1238,7 +1228,6 @@
 				E20191422934735800770948 /* BehaviorBindableProtocol.swift */,
 				E22671AC28E953A1003AA27C /* BehaviorBindable.swift */,
 			);
-			name = BehaviorBindable;
 			path = BehaviorBindable;
 			sourceTree = "<group>";
 		};
@@ -1249,7 +1238,6 @@
 				E268CD412736FA4100E764A9 /* AppDelegate+Appearance.swift */,
 				E2FD140B23F972EF00455495 /* SceneDelegate.swift */,
 			);
-			name = Application;
 			path = Application;
 			sourceTree = "<group>";
 		};
@@ -1259,7 +1247,6 @@
 				E294C7462216282D0007F0A5 /* CollapsibleCollectionHeaderView.swift */,
 				E2BEC6612CB79BE90005E0C8 /* CollapsibleHeaderViewModel.swift */,
 			);
-			name = CollapsibleCollectionHeaderView;
 			path = CollapsibleCollectionHeaderView;
 			sourceTree = "<group>";
 		};
@@ -1269,7 +1256,6 @@
 				B4B2C81E21FFB9E081C590E9 /* AuthPermission */,
 				E2D8B40929C66C00007D2804 /* AuthenticationState.swift */,
 			);
-			name = Authentication;
 			path = Authentication;
 			sourceTree = "<group>";
 		};
@@ -1287,7 +1273,6 @@
 				E2234FA52245FB43004B2C7E /* GradientView.swift */,
 				E2A65E5021FEC39800485B4E /* VoteAverageView.swift */,
 			);
-			name = CustomViews;
 			path = CustomViews;
 			sourceTree = "<group>";
 		};
@@ -1297,7 +1282,6 @@
 				E223DA092217C11C00A3DC58 /* LoadingDisplayable.swift */,
 				E21662DF25EB672D001C2905 /* LoadingView.swift */,
 			);
-			name = Loading;
 			path = Loading;
 			sourceTree = "<group>";
 		};
@@ -1307,7 +1291,6 @@
 				E208FC462635238A008593D8 /* SimpleViewStateProcessable.swift */,
 				E2251B0F22146A4D00EE7A51 /* SimpleViewState.swift */,
 			);
-			name = SimpleViewState;
 			path = SimpleViewState;
 			sourceTree = "<group>";
 		};
@@ -1316,7 +1299,6 @@
 			children = (
 				E2009F572515BEE500D4B48F /* SplashAssembly.swift */,
 			);
-			name = Splash;
 			path = Splash;
 			sourceTree = "<group>";
 		};
@@ -1326,7 +1308,6 @@
 				E270980A220FAF99007F18A2 /* MovieVideoCell.swift */,
 				E270980C220FAFA7007F18A2 /* MovieVideoCellViewModel.swift */,
 			);
-			name = Cells;
 			path = Cells;
 			sourceTree = "<group>";
 		};
@@ -1346,7 +1327,6 @@
 			children = (
 				E26EB50A25CF509300AFE4A6 /* BaseConfiguration.swift */,
 			);
-			name = BaseConfiguration;
 			path = BaseConfiguration;
 			sourceTree = "<group>";
 		};
@@ -1357,7 +1337,6 @@
 				E23E515C292F2D7400D78334 /* AnyPublishBindable.swift */,
 				E22671AA28E95396003AA27C /* PublishBindable.swift */,
 			);
-			name = PublishBindable;
 			path = PublishBindable;
 			sourceTree = "<group>";
 		};
@@ -1370,7 +1349,6 @@
 				E263FAA124D52DDB00990638 /* MoviesByGenreCoordinator.swift */,
 				E25E856526632ED30028D607 /* RecommendedMoviesCoordinator.swift */,
 			);
-			name = Coordinators;
 			path = Coordinators;
 			sourceTree = "<group>";
 		};
@@ -1391,7 +1369,6 @@
 				E2B47519227EB0960004F621 /* CGRect+Extensions.swift */,
 				E29407FF2209E85000A74F68 /* UICollectionView+Extensions.swift */,
 			);
-			name = Extensions;
 			path = Extensions;
 			sourceTree = "<group>";
 		};
@@ -1406,7 +1383,6 @@
 				E26EB4C625CF4B0900AFE4A6 /* URL+PropertyListDecoder.swift */,
 				E24345E9247CBCEE008A2B66 /* Array+MidElement.swift */,
 			);
-			name = "4 - Swift Extensions";
 			path = "4 - Swift Extensions";
 			sourceTree = "<group>";
 		};
@@ -1417,7 +1393,6 @@
 				5CCD9475CCBAF6400004DC67 /* Movies */,
 				CC015CFAC6B23D92598EEAA9 /* Account */,
 			);
-			name = Scenes;
 			path = Scenes;
 			sourceTree = "<group>";
 		};
@@ -1429,7 +1404,6 @@
 				E26493A62512F45C00E6FFE7 /* MovieDetailAssembly.swift */,
 				E26882DF251458B20000B581 /* MovieReviewDetailAssembly.swift */,
 			);
-			name = Movies;
 			path = Movies;
 			sourceTree = "<group>";
 		};
@@ -1443,7 +1417,6 @@
 				E2912673250DD358007AD101 /* ProviderAssembly.swift */,
 				E2284313250EE33A00F053DE /* SceneAssembly.swift */,
 			);
-			name = DependencyAssemblers;
 			path = DependencyAssemblers;
 			sourceTree = "<group>";
 		};
@@ -1456,7 +1429,6 @@
 				E2DCE7F624B12F940041301E /* ToggleBarButtonContent.swift */,
 				E20097F826C8D5F000C653BB /* ToggleBarButtonItemContentProtocol.swift */,
 			);
-			name = ToggleBarButtonItem;
 			path = ToggleBarButtonItem;
 			sourceTree = "<group>";
 		};
@@ -1466,7 +1438,6 @@
 				E222DC252192AF9700A2EDF4 /* MovieListCell.swift */,
 				E222DC272192B61300A2EDF4 /* MovieListCellViewModel.swift */,
 			);
-			name = Cells;
 			path = Cells;
 			sourceTree = "<group>";
 		};
@@ -1476,7 +1447,6 @@
 				E2FEDD9A2793E0D5001A016E /* ProgressHUDAdapterProtocol.swift */,
 				E2ED5D52279920C5006F4316 /* ProgressHUDAdapter.swift */,
 			);
-			name = ProgressHUD;
 			path = ProgressHUD;
 			sourceTree = "<group>";
 		};
@@ -1490,7 +1460,6 @@
 				E2E518B124A9A8D100CC3FA5 /* MovieVideosProtocols.swift */,
 				E218434D2942F6E40080B2FC /* MovieVideosViewState.swift */,
 			);
-			name = MovieVideos;
 			path = MovieVideos;
 			sourceTree = "<group>";
 		};
@@ -1506,7 +1475,6 @@
 				BE01A17D0CF2F4FCE78C1BEF /* Protocols */,
 				0B69C41B8CC1FF2C941264A5 /* Handlers */,
 			);
-			name = Support;
 			path = Support;
 			sourceTree = "<group>";
 		};
@@ -1515,7 +1483,6 @@
 			children = (
 				E25F9CE9225AED440069A6A1 /* EmptyPlaceholderView.swift */,
 			);
-			name = Empty;
 			path = Empty;
 			sourceTree = "<group>";
 		};
@@ -1538,7 +1505,6 @@
 				19BF325053C31EE165E96237 /* Transitions */,
 				79A7E0876EF16F06867C9A55 /* Animations */,
 			);
-			name = "Shared Components";
 			path = "Shared Components";
 			sourceTree = "<group>";
 		};
@@ -1550,7 +1516,6 @@
 				E2C085BF2616527400AC5383 /* UIView+ToastView.swift */,
 				E2A621C72622B6A4006A72FA /* UIView+ToastUtils.swift */,
 			);
-			name = ToastView;
 			path = ToastView;
 			sourceTree = "<group>";
 		};
@@ -1562,7 +1527,6 @@
 				E2B0844C2A201F11009F6AC4 /* MovieDetailPosterRenderContent.swift */,
 				E2A991922A4BF1E40006C9C3 /* MovieDetailPosterCoordinator.swift */,
 			);
-			name = MovieDetailPoster;
 			path = MovieDetailPoster;
 			sourceTree = "<group>";
 		};
@@ -1572,7 +1536,6 @@
 				E222B95E21FA2759008BA816 /* CollectionViewCellAnimator.swift */,
 				E26011632193823C00E53095 /* TableViewCellAnimator.swift */,
 			);
-			name = Animations;
 			path = Animations;
 			sourceTree = "<group>";
 		};
@@ -1582,7 +1545,6 @@
 				E20118CE25FF238F0091D248 /* GenreHandlerProtocol.swift */,
 				E2634D0923AFA28D00857DD8 /* GenreHandler.swift */,
 			);
-			name = GenreHandler;
 			path = GenreHandler;
 			sourceTree = "<group>";
 		};
@@ -1591,7 +1553,6 @@
 			children = (
 				D74D78F17FEA7D3D1803613D /* AppModelTests.swift */,
 			);
-			name = AppModelTests;
 			path = AppModelTests;
 			sourceTree = "<group>";
 		};
@@ -1601,7 +1562,6 @@
 				E286770C2485F9FF006685F8 /* ScaleTransitioningDelegate.swift */,
 				E286770A2485E714006685F8 /* ScaleAnimatedTransition.swift */,
 			);
-			name = ScaleTransition;
 			path = ScaleTransition;
 			sourceTree = "<group>";
 		};
@@ -1610,7 +1570,6 @@
 			children = (
 				E20EF3BC2CC3801300FA72C1 /* DeepLinkDestination.swift */,
 			);
-			name = DeepLinks;
 			path = DeepLinks;
 			sourceTree = "<group>";
 		};
@@ -1622,7 +1581,6 @@
 				E2A621C026223ABC006A72FA /* ToastDefaultConfiguration.swift */,
 				E2C44C182616C6B0004B9C9B /* ToastSuccessConfiguration.swift */,
 			);
-			name = Configurations;
 			path = Configurations;
 			sourceTree = "<group>";
 		};
@@ -1669,7 +1627,6 @@
 				6578538E67DBD3F0ECFC0CE4 /* CustomListDetailHeaderViewModelTests.swift */,
 				F57D8B6192262729E0217E5B /* DefaultSearchOptionCellViewModelTests.swift */,
 			);
-			name = ViewModelTests;
 			path = ViewModelTests;
 			sourceTree = "<group>";
 		};
@@ -1678,7 +1635,6 @@
 			children = (
 				E2033DC424D90D7600185664 /* SplashInteractor.swift */,
 			);
-			name = Splash;
 			path = Splash;
 			sourceTree = "<group>";
 		};
@@ -1688,7 +1644,6 @@
 				6F635EBFEC9D444822F06BAB /* Empty */,
 				E6E6D17110DB52DF59ADC00D /* Error */,
 			);
-			name = PlaceholderViews;
 			path = PlaceholderViews;
 			sourceTree = "<group>";
 		};
@@ -1699,7 +1654,6 @@
 				E20118E725FF258A0091D248 /* ConfigurationHandlerProtocol.swift */,
 				9B845D22F398921F580BF11A /* ImageConfigurationHandler */,
 			);
-			name = ConfigurationHandler;
 			path = ConfigurationHandler;
 			sourceTree = "<group>";
 		};
@@ -1732,7 +1686,6 @@
 				E2CBD95529BCE62400F1D102 /* ImageConfigurationHandlerProtocol.swift */,
 				E270962D247B65D800AE694E /* ImageConfigurationHandler.swift */,
 			);
-			name = ImageConfigurationHandler;
 			path = ImageConfigurationHandler;
 			sourceTree = "<group>";
 		};
@@ -1742,7 +1695,6 @@
 				E2058B6D247F6BBD00A6AB52 /* NavigationHandler.swift */,
 				E20118D925FF24D60091D248 /* NavigationHandlerProtocol.swift */,
 			);
-			name = NavigationHandler;
 			path = NavigationHandler;
 			sourceTree = "<group>";
 		};
@@ -1756,7 +1708,6 @@
 				E2B0844E2A2076EF009F6AC4 /* MovieDetailOptionsRenderContent.swift */,
 				E2A991962A4C0B8E0006C9C3 /* MovieDetailOptionsCoordinator.swift */,
 			);
-			name = MovieDetailOptions;
 			path = MovieDetailOptions;
 			sourceTree = "<group>";
 		};
@@ -1768,7 +1719,6 @@
 				E2033DC224D90CED00185664 /* SplashProtocols.swift */,
 				E2009F4E2515BD8600D4B48F /* SplashBuilder.swift */,
 			);
-			name = Splash;
 			path = Splash;
 			sourceTree = "<group>";
 		};
@@ -1780,7 +1730,6 @@
 				E26911742478D7320039F144 /* Displayable.swift */,
 				E260117521938D6C00E53095 /* Retryable.swift */,
 			);
-			name = Displayable;
 			path = Displayable;
 			sourceTree = "<group>";
 		};
@@ -1790,7 +1739,6 @@
 				E2B47515227EAFB50004F621 /* ShrinkingButton.swift */,
 				E2B47517227EAFCE0004F621 /* SpinerLayer.swift */,
 			);
-			name = ShrinkingButton;
 			path = ShrinkingButton;
 			sourceTree = "<group>";
 		};
@@ -1799,7 +1747,6 @@
 			children = (
 				E2864A3624D66D1A00271EF0 /* MovieDetailInteractor.swift */,
 			);
-			name = MovieDetail;
 			path = MovieDetail;
 			sourceTree = "<group>";
 		};
@@ -1844,7 +1791,6 @@
 				E241FE0622434B9B00144FD3 /* AuthPermissionViewController.swift */,
 				E241FE0822434D4900144FD3 /* AuthPermissionViewModel.swift */,
 			);
-			name = AuthPermission;
 			path = AuthPermission;
 			sourceTree = "<group>";
 		};
@@ -1863,7 +1809,6 @@
 				E2FEDD982793E04E001A016E /* MovieDetailUIHelper.swift */,
 				E27C019C280BFDD1000C510A /* MovieDetailActionModel.swift */,
 			);
-			name = MovieDetail;
 			path = MovieDetail;
 			sourceTree = "<group>";
 		};
@@ -1873,7 +1818,6 @@
 				E2EB9235221375190067F011 /* SimpleTableViewDataSource.swift */,
 				E2EB9236221375190067F011 /* TableViewDataSourcePrefetching.swift */,
 			);
-			name = "TableView Data Sources";
 			path = "TableView Data Sources";
 			sourceTree = "<group>";
 		};
@@ -1883,7 +1827,6 @@
 				479EF32430124ED79E7B1775 /* PublishBindable */,
 				1FDD17EF0D27225E1269D91D /* BehaviorBindable */,
 			);
-			name = Bindable;
 			path = Bindable;
 			sourceTree = "<group>";
 		};
@@ -1902,7 +1845,6 @@
 				E26011682193876500E53095 /* NibLoadable.swift */,
 				AB379AD5352BA44EB446549A /* Displayable */,
 			);
-			name = Protocols;
 			path = Protocols;
 			sourceTree = "<group>";
 		};
@@ -1914,7 +1856,6 @@
 				E2B084472A1FED1A009F6AC4 /* MovieDetailTitleRenderContent.swift */,
 				E2A991942A4BF8800006C9C3 /* MovieDetailTitleCoordinator.swift */,
 			);
-			name = MovieDetailTitle;
 			path = MovieDetailTitle;
 			sourceTree = "<group>";
 		};
@@ -1933,7 +1874,6 @@
 			children = (
 				E2A4D9352511B05500571893 /* AuthenticationAssembly.swift */,
 			);
-			name = Account;
 			path = Account;
 			sourceTree = "<group>";
 		};
@@ -1943,7 +1883,6 @@
 				E2FE24E0223E24A800E6E664 /* UpcomingMovies.entitlements */,
 				E222DC1D2192A76700A2EDF4 /* Localizable.strings */,
 			);
-			name = "3 - App Resources";
 			path = "3 - App Resources";
 			sourceTree = "<group>";
 		};
@@ -1953,7 +1892,6 @@
 				E2940802220A152700A74F68 /* MainTabBarController.swift */,
 				E26DB216236C71C90054CC95 /* MainTabBarBuilder.swift */,
 			);
-			name = TabBar;
 			path = TabBar;
 			sourceTree = "<group>";
 		};
@@ -2099,8 +2037,8 @@
 				E225889F2243120000E1327E /* AccountViewController.swift */,
 				E2CF112724A809270048AFC0 /* AccountProtocols.swift */,
 				CFA000000000000000000017 /* Sign In */,
-				E22588A72243280B00E1327E /* Profile */,
-				E2254698226AC66900E9042C /* Saved Movies */,
+				E22588A72243280B00E1327E /* UpcomingMovies/1 - View/Views/Account/Profile */,
+				E2254698226AC66900E9042C /* UpcomingMovies/1 - View/Views/Account/Saved Movies */,
 				E2254699226AC6EF00E9042C /* Custom Lists */,
 				E225469A226AC76200E9042C /* Custom List Detail */,
 				2BDC17BB8CD65C63331B6AC2 /* Authentication */,
@@ -2218,7 +2156,6 @@
 			children = (
 				E22447712234AFA000A59FEF /* VerticalFlowLayout.swift */,
 			);
-			name = Layouts;
 			path = Layouts;
 			sourceTree = "<group>";
 		};
@@ -2231,7 +2168,6 @@
 				E2F78A0025985D5A00002CAD /* RootCoordinator.swift */,
 				E25F5DBC2495E25E00DF791C /* Coordinator.swift */,
 			);
-			name = Coordinator;
 			path = Coordinator;
 			sourceTree = "<group>";
 		};
@@ -2241,7 +2177,6 @@
 				E2BB433D2CC6142A006567E9 /* DeepLinkHandler.swift */,
 				E2B68CCE2CC761C9003AE49D /* DeepLinkHandlerProtocol.swift */,
 			);
-			name = DeepLinkHandler;
 			path = DeepLinkHandler;
 			sourceTree = "<group>";
 		};
@@ -2253,7 +2188,6 @@
 				E21AA45324A1B19B00A67337 /* MovieReviewDetailCoordinator.swift */,
 				E2E5189F24A9910000CC3FA5 /* MovieReviewDetailProtocols.swift */,
 			);
-			name = MovieReviewDetail;
 			path = MovieReviewDetail;
 			sourceTree = "<group>";
 		};
@@ -2427,10 +2361,10 @@
 			children = (
 				CFA000000000000000000001 /* 1 - View */,
 				CFA000000000000000000004 /* 2 - AppModel */,
-				E221168D21914E4C0039F8C9 /* Info.plist */,
-				E221168821914E4C0039F8C9 /* Assets.xcassets */,
 				CC1787900C4359D72D858D92 /* 3 - App Resources */,
 				53E03CB22E359EF67B80C201 /* 4 - Swift Extensions */,
+				E221168821914E4C0039F8C9 /* Assets.xcassets */,
+				E221168D21914E4C0039F8C9 /* Info.plist */,
 			);
 			path = UpcomingMovies;
 			sourceTree = "<group>";
@@ -2508,7 +2442,7 @@
 			path = "UpcomingMovies/1 - View/Views/Movies/Movie Credits";
 			sourceTree = SOURCE_ROOT;
 		};
-		E2254698226AC66900E9042C /* Saved Movies */ = {
+		E2254698226AC66900E9042C /* UpcomingMovies/1 - View/Views/Account/Saved Movies */ = {
 			isa = PBXGroup;
 			children = (
 				E276DAD12A6FA59D005A14C1 /* Cells */,
@@ -2570,7 +2504,7 @@
 			path = SectionView;
 			sourceTree = "<group>";
 		};
-		E22588A72243280B00E1327E /* Profile */ = {
+		E22588A72243280B00E1327E /* UpcomingMovies/1 - View/Views/Account/Profile */ = {
 			isa = PBXGroup;
 			children = (
 				E276DAD22A6FA788005A14C1 /* Cells */,
@@ -2735,7 +2669,6 @@
 				E2143DBE22572AE5003E939F /* Options */,
 				E2143DBD22572AB7003E939F /* Account Info */,
 			);
-			name = Cells;
 			path = Cells;
 			sourceTree = "<group>";
 		};
@@ -3071,7 +3004,6 @@
 			children = (
 				E26011662193870800E53095 /* ErrorPlaceholderView.swift */,
 			);
-			name = Error;
 			path = Error;
 			sourceTree = "<group>";
 		};
@@ -3082,7 +3014,6 @@
 				18103BF699379DC6C2FCC5E3 /* CollectionView Data Sources */,
 				E2266505247E13D900E12326 /* DataSourcePrefetching.swift */,
 			);
-			name = DataSources;
 			path = DataSources;
 			sourceTree = "<group>";
 		};
@@ -3091,7 +3022,6 @@
 			children = (
 				08C79FEFAC06BF5416E5F41A /* Interactors */,
 			);
-			name = MovieList;
 			path = MovieList;
 			sourceTree = "<group>";
 		};
@@ -3113,7 +3043,6 @@
 				7CBF5A701D958DE970164FCD /* GenreHandler */,
 				925EFC1CA57ABE6AAE01917D /* ConfigurationHandler */,
 			);
-			name = Handlers;
 			path = Handlers;
 			sourceTree = "<group>";
 		};
@@ -3122,7 +3051,6 @@
 			children = (
 				E28A68D024D79F9900D20E52 /* MovieVideosInteractor.swift */,
 			);
-			name = MovieVideos;
 			path = MovieVideos;
 			sourceTree = "<group>";
 		};
@@ -3133,7 +3061,6 @@
 				B1852D11707D4F9C97A8CA96 /* Preferences */,
 				F3E97AF517A5F1E39DABCD84 /* Handlers */,
 			);
-			name = Support;
 			path = Support;
 			sourceTree = "<group>";
 		};
