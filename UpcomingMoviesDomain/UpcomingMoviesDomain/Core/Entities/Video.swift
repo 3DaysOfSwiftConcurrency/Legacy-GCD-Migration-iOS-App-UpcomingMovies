@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct Video {
+public struct Video: Sendable {
 
     public let id: String
     public let key: String

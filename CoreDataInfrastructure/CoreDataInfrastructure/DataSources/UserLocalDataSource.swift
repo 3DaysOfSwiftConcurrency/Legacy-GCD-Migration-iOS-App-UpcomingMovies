@@ -19,31 +19,30 @@ final class UserLocalDataSource: UserLocalDataSourceProtocol {
 
     init(store: PersistenceStore<CDUser>) {
         self.store = store
-        self.store.configureResultsContoller(sortDescriptors: CDUser.defaultSortDescriptors,
-                                             notifyChangesOn: [.insert])
-        self.store.delegate = self
+        store.observeSavedChanges(insertionsOnly: true) { [weak self] in self?.didUpdateUser?() }
     }
 
     // MARK: - UserLocalDataSourceProtocol
+
+    func loadUser(with id: Int, completion: @escaping (Result<User?, Error>) -> Void) {
+        let context = store.createBackgroundContext()
+        context.perform {
+            completion(Result {
+                try self.store.openStore()
+                let request = CDUser.sortedFetchRequest
+                request.predicate = NSPredicate(format: "id == %d", id)
+                request.fetchLimit = 1
+                return try context.fetch(request).first?.asDomain()
+            })
+        }
+    }
 
     func find(with id: Int) -> User? {
         store.find(with: id)?.asDomain()
     }
 
-    func saveUser(_ user: User) {
-        self.store.saveUser(user)
-    }
-
-}
-
-// MARK: - PersistenceStoreDelegate
-
-extension UserLocalDataSource: PersistenceStoreDelegate {
-
-    func persistenceStore(willUpdateEntity shouldPrepare: Bool) {}
-
-    func persistenceStore(didUpdateEntity update: Bool) {
-        didUpdateUser?()
+    func saveUser(_ user: User, completion: @escaping (Result<Void, Error>) -> Void) {
+        self.store.saveUser(user, completion: completion)
     }
 
 }

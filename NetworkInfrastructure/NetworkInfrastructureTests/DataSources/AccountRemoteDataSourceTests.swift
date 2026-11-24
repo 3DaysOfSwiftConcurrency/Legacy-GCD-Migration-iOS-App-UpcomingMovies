@@ -196,9 +196,14 @@ final class AccountRemoteDataSourceTests: XCTestCase {
         authManager.accessToken = .init(token: "", accountId: "")
         accountClient.getRecommendedListResult = .success(nil)
         // Act
-        dataSource.getRecommendedList(page: 1) { _ in
-            XCTFail("Should not receive any recommended list")
+        let rejected = expectation(description: "Missing response is rejected")
+        dataSource.getRecommendedList(page: 1) { result in
+            if case .failure(let error) = result {
+                XCTAssertEqual(error as? APIError, .invalidData)
+            } else { XCTFail("Expected invalid data") }
+            rejected.fulfill()
         }
+        wait(for: [rejected], timeout: 1)
         // Assert
         XCTAssertEqual(accountClient.getRecommendedListCallCount, 1)
     }
@@ -262,9 +267,14 @@ final class AccountRemoteDataSourceTests: XCTestCase {
         authManager.accessToken = .init(token: "", accountId: "")
         accountClient.getCustomListsResult = .success(nil)
         // Act
-        dataSource.getCustomLists(page: 1) { _ in
-            XCTFail("Should not receive any custom list")
+        let rejected = expectation(description: "Missing response is rejected")
+        dataSource.getCustomLists(page: 1) { result in
+            if case .failure(let error) = result {
+                XCTAssertEqual(error as? APIError, .invalidData)
+            } else { XCTFail("Expected invalid data") }
+            rejected.fulfill()
         }
+        wait(for: [rejected], timeout: 1)
         // Assert
         XCTAssertEqual(accountClient.getCustomListsCallCount, 1)
     }
@@ -328,9 +338,14 @@ final class AccountRemoteDataSourceTests: XCTestCase {
         authManager.accessToken = .init(token: "", accountId: "")
         accountClient.getCustomListMoviesResult = .success(nil)
         // Act
-        dataSource.getCustomListMovies(listId: "1") { _ in
-            XCTFail("Should not receive any custom list movies")
+        let rejected = expectation(description: "Missing response is rejected")
+        dataSource.getCustomListMovies(listId: "1") { result in
+            if case .failure(let error) = result {
+                XCTAssertEqual(error as? APIError, .invalidData)
+            } else { XCTFail("Expected invalid data") }
+            rejected.fulfill()
         }
+        wait(for: [rejected], timeout: 1)
         // Assert
         XCTAssertEqual(accountClient.getCustomListMoviesCallCount, 1)
     }

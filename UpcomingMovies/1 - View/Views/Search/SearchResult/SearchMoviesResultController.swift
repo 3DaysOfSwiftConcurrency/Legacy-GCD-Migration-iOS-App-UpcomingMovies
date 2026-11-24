@@ -17,6 +17,7 @@ protocol SearchMoviesResultControllerDelegate: UIViewController {
 final class SearchMoviesResultController: UIViewController, Keyboardable {
 
     private var viewModel: SearchMoviesResultViewModelProtocol
+    private var keyboardObservers: [NSObjectProtocol] = []
     private var dataSource: SearchMoviesResultDataSource?
 
     weak var delegate: SearchMoviesResultControllerDelegate?
@@ -38,8 +39,9 @@ final class SearchMoviesResultController: UIViewController, Keyboardable {
     // MARK: - Lifecycle
 
     deinit {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        for observer in keyboardObservers {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     override func loadView() {
@@ -59,19 +61,19 @@ final class SearchMoviesResultController: UIViewController, Keyboardable {
     // MARK: - Private
 
     private func setupObservers() {
-        registerKeyboardWillShowNotification(using: { [weak self] keyboardFrame in
+        keyboardObservers.append(registerKeyboardWillShowNotification(using: { [weak self] keyboardFrame in
             guard let self else { return }
             self.view.layoutIfNeeded()
             self.searchMoviesResultView.setBottomContraintConstant(-keyboardFrame.size.height)
             self.view.layoutIfNeeded()
-        })
+        }))
 
-        registerKeyboardWillHideNotification(using: { [weak self] in
+        keyboardObservers.append(registerKeyboardWillHideNotification(using: { [weak self] in
             guard let self else { return }
             self.view.layoutIfNeeded()
             self.searchMoviesResultView.setBottomContraintConstant(0)
             self.view.layoutIfNeeded()
-        })
+        }))
     }
 
     private func setupUI() {
@@ -91,6 +93,11 @@ final class SearchMoviesResultController: UIViewController, Keyboardable {
         case .empty:
             let footerView = FooterView(message: viewModel.emptySearchResultsTitle)
             searchMoviesResultView.setFooterView(.custom(footerView))
+        case .recentSearches where viewModel.historyError != nil:
+            if let error = viewModel.historyError {
+                let footer = FooterView.retryFooter(for: error) { [weak self] in self?.viewModel.loadRecentSearches() }
+                searchMoviesResultView.setFooterView(.custom(footer))
+            }
         case .populated, .recentSearches:
             searchMoviesResultView.setFooterView(.empty)
         case .searching:
@@ -111,6 +118,7 @@ final class SearchMoviesResultController: UIViewController, Keyboardable {
         }, on: .main)
         viewModel.needsRefresh.bind({ [weak self] in
             guard let self else { return }
+            self.configureFooterView(with: self.viewModel.viewState.value)
             self.reloadTableView()
         }, on: .main)
     }

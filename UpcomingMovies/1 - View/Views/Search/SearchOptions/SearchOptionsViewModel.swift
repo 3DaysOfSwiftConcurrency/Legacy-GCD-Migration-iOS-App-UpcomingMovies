@@ -46,6 +46,7 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
     // MARK: - Stored properties
 
+    private(set) var historyError: Error?
     private var movieVisits: [MovieVisitProtocol] = []
     private var genres: [GenreProtocol] = []
     private let defaultSearchOptions: [DefaultSearchOption] = [.popular, .topRated]
@@ -94,14 +95,18 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
             do {
                 movieVisits = try await searchMoviesFeature.loadMovieVisits()
+                let recovered = historyError != nil
+                historyError = nil
                 let viewStateChanged = configureViewState(movieVisits: movieVisits)
-                if viewStateChanged {
+                if recovered || viewStateChanged {
                     needsContentReload.send()
                 } else if let index = sectionIndex(for: .recentlyVisited) {
                     updateVisitedMovies.send(index)
                 }
             } catch {
-                // The existing screen keeps its current visit history on failure.
+                guard !Task.isCancelled else { return }
+                historyError = error
+                needsContentReload.send()
             }
         }
 

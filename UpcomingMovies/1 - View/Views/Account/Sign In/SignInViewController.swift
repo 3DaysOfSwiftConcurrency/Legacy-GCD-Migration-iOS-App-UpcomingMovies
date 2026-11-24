@@ -59,9 +59,10 @@ final class SignInViewController: UIViewController, Storyboarded {
             guard let self else { return }
             self.coordinator?.showAuthPermission(for: authPermissionURL, and: self)
         }, on: .main)
-        viewModel?.didReceiveError.bind({ [weak self] in
+        viewModel?.didReceiveError.bind({ [weak self] message in
             guard let self = self else { return }
             self.stopLoading()
+            self.view.showFailureToast(withMessage: message)
         }, on: .main)
     }
 

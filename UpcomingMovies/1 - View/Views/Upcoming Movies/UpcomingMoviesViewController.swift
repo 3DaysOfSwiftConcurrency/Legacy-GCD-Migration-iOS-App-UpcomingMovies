@@ -160,6 +160,7 @@ final class UpcomingMoviesViewController: UIViewController, Storyboarded, Loadin
 
         viewModel?.didUpdatePresentationMode.bind({ [weak self] presentationMode in
             guard let self, let layoutProvider = self.layoutProvider else { return }
+            self.setupNavigationBar()
             let newCollectionViewLayout = layoutProvider.collectionViewLayout(for: presentationMode, and: self.collectionView.frame.width)
             self.updateCollectionViewLayout(newCollectionViewLayout)
         }, on: .main)
@@ -170,7 +171,6 @@ final class UpcomingMoviesViewController: UIViewController, Storyboarded, Loadin
     @objc func toggleGridAction(_ sender: Any) {
         guard !isAnimatingPresentation else { return }
 
-        toggleGridBarButtonItem.toggle()
         viewModel?.updatePresentationMode()
     }
 

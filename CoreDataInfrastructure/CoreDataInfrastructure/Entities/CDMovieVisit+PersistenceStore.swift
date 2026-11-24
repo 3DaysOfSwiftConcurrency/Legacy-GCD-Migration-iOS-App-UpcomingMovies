@@ -6,19 +6,21 @@
 //  Copyright © 2019 Alonso. All rights reserved.
 //
 
+import CoreData
+
 extension PersistenceStore where Entity == CDMovieVisit {
 
-    func saveMovieVisit(with id: Int, title: String, posterPath: String?, completion: ((Bool) -> Void)? = nil) {
+    func saveMovieVisit(with id: Int, title: String, posterPath: String?, completion: ((Result<Void, Error>) -> Void)? = nil) {
         guard let posterPath = posterPath else {
-            completion?(false)
+            completion?(.failure(CocoaError(.validationMissingMandatoryProperty)))
             return
         }
-        managedObjectContext.performChanges {
+        do { try openStore() } catch { completion?(.failure(error)); return }
+        managedObjectContext.performChanges(completion: completion) {
             _ = CDMovieVisit.insert(into: self.managedObjectContext,
                                     id: id,
                                     title: title,
-                                    posterPath: posterPath)
-            completion?(true)
+                                    posterPath: posterPath, createdAt: self.now())
         }
     }
 

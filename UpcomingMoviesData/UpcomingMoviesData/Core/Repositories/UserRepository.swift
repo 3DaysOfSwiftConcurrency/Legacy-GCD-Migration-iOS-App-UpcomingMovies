@@ -22,12 +22,16 @@ public final class UserRepository: UserUseCaseProtocol {
         self.localDataSource = localDataSource
     }
 
+    public func loadUser(with id: Int, completion: @escaping (Result<User?, Error>) -> Void) {
+        localDataSource.loadUser(with: id, completion: completion)
+    }
+
     public func find(with id: Int) -> User? {
         localDataSource.find(with: id)
     }
 
-    public func saveUser(_ user: User) {
-        localDataSource.saveUser(user)
+    public func saveUser(_ user: User, completion: @escaping (Result<Void, Error>) -> Void) {
+        localDataSource.saveUser(user, completion: completion)
     }
 
 }

@@ -12,12 +12,6 @@ final class VisitedMovieCollectionViewCell: UICollectionViewCell, Animatable {
 
     @IBOutlet private weak var posterImageView: UIImageView!
 
-    var viewModel: VisitedMovieCellViewModelProtocol? {
-        didSet {
-            setupBindables()
-        }
-    }
-
     var settings: AnimatableSettingsProtocol {
         var settings = AnimatableSettings()
         settings.transform = .init(scaleX: 0.90, y: 0.90)
@@ -37,9 +31,8 @@ final class VisitedMovieCollectionViewCell: UICollectionViewCell, Animatable {
 
     // MARK: - Reactive Behavior
 
-    private func setupBindables() {
-        guard let viewModel = viewModel else { return }
-        posterImageView.setImage(with: viewModel.posterURL)
+    func configure(posterURL: URL?) {
+        posterImageView.setImage(with: posterURL)
     }
 
 }

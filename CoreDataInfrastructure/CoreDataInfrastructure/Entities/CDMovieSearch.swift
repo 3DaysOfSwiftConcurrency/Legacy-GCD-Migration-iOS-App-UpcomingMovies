@@ -15,11 +15,11 @@ final class CDMovieSearch: NSManagedObject {
     @NSManaged private(set) var searchText: String
     @NSManaged private(set) var createdAt: Date
 
-    static func insert(into context: NSManagedObjectContext, searchText: String) -> CDMovieSearch {
+    static func insert(into context: NSManagedObjectContext, searchText: String, createdAt: Date) -> CDMovieSearch {
         let movieSearch: CDMovieSearch = context.insertObject()
         movieSearch.id = UUID().uuidString
         movieSearch.searchText = searchText
-        movieSearch.createdAt = Date()
+        movieSearch.createdAt = createdAt
         return movieSearch
     }
 

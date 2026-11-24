@@ -22,10 +22,11 @@ final class RecentlyVisitedMoviesTableViewCell: UITableViewCell {
 
     weak var delegate: RecentlyVisitedMoviesTableViewCellDelegate?
 
-    var viewModel: RecentlyVisitedMoviesCellViewModelProtocol? {
-        didSet {
-            setupBindables()
-        }
+    private var posterURLs: [URL?] = []
+
+    func configure(posterURLs: [URL?]) {
+        self.posterURLs = posterURLs
+        collectionView.reloadData()
     }
 
     // MARK: - Lifecycle
@@ -48,11 +49,6 @@ final class RecentlyVisitedMoviesTableViewCell: UITableViewCell {
         collectionView.registerNib(cellType: VisitedMovieCollectionViewCell.self)
     }
 
-    // MARK: - Reactive Behavior
-
-    private func setupBindables() {
-        collectionView.reloadData()
-    }
 
 }
 
@@ -61,14 +57,12 @@ final class RecentlyVisitedMoviesTableViewCell: UITableViewCell {
 extension RecentlyVisitedMoviesTableViewCell: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let viewModel = viewModel else { return 0 }
-        return viewModel.visitedMovieCells.count
+        posterURLs.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let viewModel = viewModel else { fatalError() }
         let cell = collectionView.dequeueReusableCell(with: VisitedMovieCollectionViewCell.self, for: indexPath)
-        cell.viewModel = viewModel.visitedMovieCells[indexPath.row]
+        cell.configure(posterURL: posterURLs[indexPath.row])
         return cell
     }
 

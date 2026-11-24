@@ -8,6 +8,14 @@
 
 import Foundation
 
+private struct NetworkingManager: Sendable {
+    let session: URLSession
+
+    func start(_ request: URLRequest, completion: @escaping @Sendable (Data?, URLResponse?, Error?) -> Void) {
+        session.dataTask(with: request, completionHandler: completion).resume()
+    }
+}
+
 protocol APIClient {
 
     var session: URLSession { get }
@@ -23,8 +31,8 @@ extension APIClient {
 
     private func decodingTask<T: Decodable>(with request: URLRequest,
                                             decodingType: T.Type,
-                                            completion: @escaping JSONTaskCompletionHandler) -> URLSessionDataTask {
-        let task = session.dataTask(with: request) { data, response, _ in
+                                            completion: @escaping JSONTaskCompletionHandler) {
+        NetworkingManager(session: session).start(request) { data, response, _ in
             guard let httpResponse = response as? HTTPURLResponse else {
                 completion(.failure(.requestFailed))
                 return
@@ -45,13 +53,12 @@ extension APIClient {
                 completion(.failure(.requestFailed))
             }
         }
-        return task
     }
 
     func fetch<T: Decodable>(with request: URLRequest,
                              decode: @escaping (Decodable) -> T?,
                              completion: @escaping (Result<T, APIError>) -> Void) {
-        let task = decodingTask(with: request, decodingType: T.self) { result in
+        decodingTask(with: request, decodingType: T.self) { result in
             let deliver = {
                 switch result {
                 case .success(let json):
@@ -73,7 +80,6 @@ extension APIClient {
                 RunLoop.main.perform(inModes: [.common], block: deliver)
             }
         }
-        task.resume()
     }
 
 }

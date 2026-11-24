@@ -12,41 +12,68 @@ public class CoreDataStack: CoreDataStackProtocol {
 
     public static let shared = CoreDataStack()
 
-    private var persistentStoreDescriptions: [NSPersistentStoreDescription] = []
+    private var groupExtensionIds: [String] = []
 
-    private init() {}
+    init() {}
+
+    init(container: NSPersistentContainer) {
+        persistentContainer = container
+    }
 
     // MARK: - CoreDataStackProtocol
 
     func setExtensionPersistentStoreDescriptions(_ groupExtensionIds: [String]) {
-        persistentStoreDescriptions = groupExtensionIds.map({ groupId in
-            let storeURL = URL.storeURL(for: groupId, databaseName: Constants.containerName)
-            let storeDescription = NSPersistentStoreDescription(url: storeURL)
-            return storeDescription
-        })
+        self.groupExtensionIds = groupExtensionIds
     }
 
     // MARK: - Private
 
-    lazy var persistentContainer: NSPersistentContainer = {
+    // The bundled schema can be read off the main actor without touching the user's database.
+    private static let managedObjectModel: NSManagedObjectModel = {
         let bundle = Bundle(for: CoreDataStack.self)
         guard let url = bundle.url(forResource: Constants.containerName, withExtension: "momd"),
               let model = NSManagedObjectModel(contentsOf: url) else {
-            fatalError()
+            preconditionFailure("The app bundle is missing the movie data model.")
         }
+        return model
+    }()
 
-        let container = NSPersistentContainer(name: Constants.containerName, managedObjectModel: model)
+    public static func prepareManagedObjectModel() {
+        _ = managedObjectModel
+    }
 
-        if !persistentStoreDescriptions.isEmpty {
-            container.persistentStoreDescriptions = persistentStoreDescriptions
-        }
-
-        container.loadPersistentStores { _, error in
-            guard error == nil else { fatalError() }
-        }
+    lazy var persistentContainer: NSPersistentContainer = {
+        let container = NSPersistentContainer(name: Constants.containerName, managedObjectModel: Self.managedObjectModel)
         container.viewContext.mergePolicy = NSMergePolicy.overwrite
         return container
     }()
+
+    private let openLock = NSLock()
+    private var opened = false
+
+    func openStore() throws {
+        openLock.lock()
+        defer { openLock.unlock() }
+        guard !opened else { return }
+        let container = persistentContainer
+        if !groupExtensionIds.isEmpty {
+            container.persistentStoreDescriptions = try groupExtensionIds.map { group in
+                NSPersistentStoreDescription(url: try URL.storeURL(for: group, databaseName: Constants.containerName))
+            }
+        }
+        for description in container.persistentStoreDescriptions {
+            if let url = description.url, url.isFileURL {
+                try FileManager.default.createDirectory(at: url.deletingLastPathComponent(), withIntermediateDirectories: true)
+            }
+            description.shouldAddStoreAsynchronously = false
+        }
+        var failure: Error?
+        container.loadPersistentStores { _, error in
+            if let error { failure = error }
+        }
+        if let failure { throw failure }
+        opened = true
+    }
 
     // MARK: - Test mockups
 

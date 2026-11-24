@@ -40,7 +40,7 @@ class MovieCreditsDataSource: NSObject, UICollectionViewDataSource, CollapsibleH
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind,
                                                                      withReuseIdentifier: "CollapsibleCollectionHeaderView",
                                                                      for: indexPath) as! CollapsibleCollectionHeaderView
-        header.viewModel = viewModel.headerModel(for: indexPath.section)
+        header.configure(with: viewModel.headerModel(for: indexPath.section))
         header.delegate = self
         header.updateArrowImageView(animated: isAnimationEnabled)
         if isAnimationEnabled { isAnimationEnabled.toggle() }

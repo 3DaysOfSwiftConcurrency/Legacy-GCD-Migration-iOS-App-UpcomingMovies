@@ -14,7 +14,7 @@ protocol SignInViewModelProtocol {
     var startLoading: AnyBehaviorBindable<Bool> { get }
     var showAuthPermission: AnyPublishBindable<URL> { get }
     var didUpdateAuthenticationState: AnyBehaviorBindable<AuthenticationState?> { get }
-    var didReceiveError: AnyPublishBindable<Void> { get }
+    var didReceiveError: AnyPublishBindable<String> { get }
 
     func startAuthorizationProcess()
     func signInUser()

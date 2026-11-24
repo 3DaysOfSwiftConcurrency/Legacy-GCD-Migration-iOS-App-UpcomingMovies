@@ -6,9 +6,9 @@
 //  Copyright © 2020 Alonso. All rights reserved.
 //
 
-public struct SortConfiguration {
+public struct SortConfiguration: Sendable {
 
-    public private(set) var movieSortKeys: [String]
+    public let movieSortKeys: [String]
 
     public init(movieSortKeys: [String]) {
         self.movieSortKeys = movieSortKeys

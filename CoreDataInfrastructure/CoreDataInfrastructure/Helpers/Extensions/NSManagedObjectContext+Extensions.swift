@@ -28,10 +28,16 @@ extension NSManagedObjectContext {
         }
     }
 
-    func performChanges(block: @escaping () -> Void) {
+    func performChanges(completion: ((Result<Void, Error>) -> Void)? = nil, block: @escaping () -> Void) {
         perform {
             block()
-            self.saveOrRollback()
+            do {
+                try self.save()
+                completion?(.success(()))
+            } catch {
+                self.rollback()
+                completion?(.failure(error))
+            }
         }
     }
 

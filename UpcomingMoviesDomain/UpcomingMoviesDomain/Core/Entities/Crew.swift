@@ -6,7 +6,7 @@
 //  Copyright © 2019 Alonso. All rights reserved.
 //
 
-public struct Crew: Equatable {
+public struct Crew: Equatable, Sendable {
 
     public let id: Int
     public let job: String

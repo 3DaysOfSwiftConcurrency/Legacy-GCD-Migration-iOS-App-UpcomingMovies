@@ -6,6 +6,7 @@
 //  Copyright © 2020 Alonso. All rights reserved.
 //
 
+import Combine
 import Foundation
 import UpcomingMoviesDomain
 
@@ -39,6 +40,11 @@ final class UpcomingMoviesFeature {
         self.makeMoviePresentationModel = makeMoviePresentationModel
     }
 
+    private let presentationModeChanges = PassthroughSubject<UpcomingMoviesPresentationMode, Never>()
+    var modeChanges: AnyPublisher<UpcomingMoviesPresentationMode, Never> {
+        presentationModeChanges.eraseToAnyPublisher()
+    }
+
     var presentationMode: UpcomingMoviesPresentationMode {
         preferences.upcomingMoviesPresentationMode
     }
@@ -50,10 +56,12 @@ final class UpcomingMoviesFeature {
         case .detail: next = .preview
         }
         preferences.upcomingMoviesPresentationMode = next
+        presentationModeChanges.send(next)
         return next
     }
 
     func loadMovies(page: Int) async throws -> [MovieProtocol] {
+        try Task.checkCancellation()
         // A pull-to-refresh is more relevant than an earlier prefetch. The network
         // requests may finish in either order, but only the newest request is
         // allowed to publish a result to the screen.
@@ -61,15 +69,18 @@ final class UpcomingMoviesFeature {
         if let currentLoad, currentLoad.page == page {
             loadTask = currentLoad.task
         } else {
+            currentLoad?.task.cancel()
             latestRequestIdentifier += 1
             let loadUpcomingMovies = self.loadUpcomingMovies
             let makeMoviePresentationModel = self.makeMoviePresentationModel
             loadTask = Task {
+                try Task.checkCancellation()
                 let domainMovies: [Movie] = try await withCheckedThrowingContinuation { continuation in
                     loadUpcomingMovies(page) { result in
                         continuation.resume(with: result)
                     }
                 }
+                try Task.checkCancellation()
                 return domainMovies.map(makeMoviePresentationModel)
             }
             currentLoad = (page, loadTask)
@@ -82,11 +93,12 @@ final class UpcomingMoviesFeature {
             }
         }
 
-        let movies = try await loadTask.value
+        let result = await loadTask.result
+        try Task.checkCancellation()
         guard requestIdentifier == latestRequestIdentifier else {
             throw CancellationError()
         }
-        return movies
+        return try result.get()
     }
 
 }

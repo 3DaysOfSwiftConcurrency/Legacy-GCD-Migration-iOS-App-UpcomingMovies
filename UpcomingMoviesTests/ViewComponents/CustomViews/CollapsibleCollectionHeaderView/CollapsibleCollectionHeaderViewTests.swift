@@ -33,7 +33,7 @@ final class CollapsibleCollectionHeaderViewTests: XCTestCase {
     func testTapGestureAction() {
         // Arrange
         let delegate = MockCollapsibleHeaderViewDelegate()
-        headerView?.viewModel = MockCollapsibleHeaderViewModelProtocol()
+        headerView?.configure(with: MockCollapsibleHeaderViewModelProtocol())
         headerView?.delegate = delegate
         // Act
         headerView?.tapGestureAction()
@@ -51,24 +51,29 @@ final class CollapsibleCollectionHeaderViewTests: XCTestCase {
         XCTAssertEqual(delegate.sectionToggledCallCount, 0)
     }
 
-    func testUpdateArrowImageView() {
+    func testUpdateArrowImageView() throws {
         // Arrange
         let viewModel = MockCollapsibleHeaderViewModelProtocol()
-        headerView?.viewModel = viewModel
+        viewModel.arrowRotationValueResult = .pi / 2
+        headerView?.configure(with: viewModel)
         // Act
         headerView?.updateArrowImageView(animated: true)
         // Assert
-        XCTAssertEqual(viewModel.arrowRotationValueCallCount, 1)
+        let rotation = try XCTUnwrap(headerView?.arrowImageView.layer.animation(forKey: "transform.rotation") as? CABasicAnimation)
+        XCTAssertEqual(rotation.keyPath, "transform.rotation")
+        XCTAssertEqual((rotation.toValue as? NSNumber)?.doubleValue, Double.pi / 2)
+        XCTAssertEqual(rotation.duration, 0.3)
     }
 
     func testUpdateArrowImageViewWithoutAnimation() {
         // Arrange
         let viewModel = MockCollapsibleHeaderViewModelProtocol()
-        headerView?.viewModel = viewModel
+        viewModel.arrowRotationValueResult = .pi / 2
+        headerView?.configure(with: viewModel)
         // Act
         headerView?.updateArrowImageView(animated: false)
         // Assert
-        XCTAssertEqual(viewModel.arrowRotationValueCallCount, 1)
+        XCTAssertEqual(headerView?.arrowImageView.transform, CGAffineTransform(rotationAngle: .pi / 2))
     }
 
 }

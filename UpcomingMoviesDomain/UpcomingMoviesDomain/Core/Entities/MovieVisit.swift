@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct MovieVisit: Equatable {
+public struct MovieVisit: Equatable, Sendable {
 
     public let id: Int
     public let title: String

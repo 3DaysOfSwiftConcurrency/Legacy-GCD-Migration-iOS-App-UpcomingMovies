@@ -8,6 +8,7 @@
 
 import UIKit
 
+@MainActor
 protocol AccountViewModelProtocol {
 
     var showAuthPermission: AnyPublishBindable<URL> { get }
@@ -17,6 +18,7 @@ protocol AccountViewModelProtocol {
     var navigationItemTitle: String? { get }
 
     func isUserSignedIn() -> Bool
+    func loadCurrentUser() async throws -> UserProtocol?
     func currentUser() -> UserProtocol?
 
 }

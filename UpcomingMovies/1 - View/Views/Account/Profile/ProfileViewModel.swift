@@ -21,7 +21,7 @@ final class ProfileViewModel: ProfileViewModelProtocol {
 
     let reloadAccountInfo = PublishBindable<Void>().eraseToAnyBindable()
     let didUpdateAuthenticationState = BehaviorBindable<AuthenticationState?>(nil).eraseToAnyBindable()
-    let didReceiveError = PublishBindable<Void>().eraseToAnyBindable()
+    let didReceiveError = PublishBindable<String>().eraseToAnyBindable()
 
     // MARK: - Computed properties
 
@@ -107,7 +107,7 @@ final class ProfileViewModel: ProfileViewModelProtocol {
                 _ = try await self.profileFeature.signOut()
                 self.didUpdateAuthenticationState.value = .justSignedOut
             } catch {
-                self.didReceiveError.send()
+                self.didReceiveError.send(error.localizedDescription)
             }
         }
     }

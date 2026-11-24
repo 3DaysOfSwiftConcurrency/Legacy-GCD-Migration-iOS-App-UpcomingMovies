@@ -6,7 +6,7 @@
 //  Copyright © 2019 Alonso. All rights reserved.
 //
 
-public struct Cast: Equatable {
+public struct Cast: Equatable, Sendable {
 
     public let id: Int
     public let character: String

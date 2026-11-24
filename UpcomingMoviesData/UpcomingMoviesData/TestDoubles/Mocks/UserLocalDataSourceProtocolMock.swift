@@ -5,7 +5,7 @@
 //  Created by Alonso on 8/06/22.
 //
 
-@testable import UpcomingMoviesDomain
+import UpcomingMoviesDomain
 
 final class UserLocalDataSourceProtocolMock: UserLocalDataSourceProtocol {
 
@@ -18,9 +18,11 @@ final class UserLocalDataSourceProtocolMock: UserLocalDataSourceProtocol {
         return foundUser
     }
 
+    public var saveResult: Result<Void, Error> = .success(())
     private(set) var saveUserCallCount = 0
-    func saveUser(_ user: User) {
+    func saveUser(_ user: User, completion: @escaping (Result<Void, Error>) -> Void) {
         saveUserCallCount += 1
+        completion(saveResult)
     }
 
 }

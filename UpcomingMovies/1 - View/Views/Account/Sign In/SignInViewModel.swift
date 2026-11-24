@@ -18,7 +18,7 @@ final class SignInViewModel: SignInViewModelProtocol {
     let startLoading = BehaviorBindable(false).eraseToAnyBindable()
     let showAuthPermission = PublishBindable<URL>().eraseToAnyBindable()
     let didUpdateAuthenticationState = BehaviorBindable<AuthenticationState?>(nil).eraseToAnyBindable()
-    let didReceiveError = PublishBindable<Void>().eraseToAnyBindable()
+    let didReceiveError = PublishBindable<String>().eraseToAnyBindable()
 
     var signInButtonTitle: String? {
         LocalizedStrings.signIn()
@@ -31,6 +31,10 @@ final class SignInViewModel: SignInViewModelProtocol {
     // MARK: - SignInViewModelProtocol
 
     func startAuthorizationProcess() {
+        if signInFeature.needsSaveRetry {
+            signInUser()
+            return
+        }
         guard authorizationTask == nil else {
             return
         }
@@ -49,7 +53,7 @@ final class SignInViewModel: SignInViewModelProtocol {
                 let url = try await self.signInFeature.authorizationURL()
                 self.showAuthPermission.send(url)
             } catch {
-                self.didReceiveError.send()
+                self.didReceiveError.send(error.localizedDescription)
             }
         }
     }
@@ -72,7 +76,7 @@ final class SignInViewModel: SignInViewModelProtocol {
                 _ = try await self.signInFeature.signIn()
                 self.didUpdateAuthenticationState.value = .justSignedIn
             } catch {
-                self.didReceiveError.send()
+                self.didReceiveError.send(error.localizedDescription)
             }
         }
     }

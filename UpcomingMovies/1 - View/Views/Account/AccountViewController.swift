@@ -15,6 +15,11 @@ final class AccountViewController: UIViewController, Storyboarded {
     var viewModel: AccountViewModelProtocol?
     weak var coordinator: AccountCoordinatorProtocol?
 
+    private var accountLoad: Task<Void, Never>?
+    private var retryFooter: UIView?
+
+    deinit { accountLoad?.cancel() }
+
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -39,7 +44,28 @@ final class AccountViewController: UIViewController, Storyboarded {
 
     private func setupContainerView() {
         guard let viewModel else { return }
-        viewModel.isUserSignedIn() ? showProfileView() : showSignInView()
+        accountLoad?.cancel()
+        accountLoad = Task { [weak self] in
+            do {
+                let user = try await viewModel.loadCurrentUser()
+                guard !Task.isCancelled, let self else { return }
+                retryFooter?.removeFromSuperview()
+                if let user {
+                    coordinator?.embedProfileViewController(on: self, for: user)
+                    coordinator?.removeSignInViewController(from: self)
+                } else {
+                    showSignInView()
+                }
+            } catch {
+                guard !Task.isCancelled, let self else { return }
+                retryFooter?.removeFromSuperview()
+                let footer = FooterView.retryFooter(for: error) { [weak self] in self?.setupContainerView() }
+                view.addSubview(footer)
+                footer.center = CGPoint(x: view.bounds.midX, y: view.bounds.midY)
+                footer.autoresizingMask = [.flexibleWidth, .flexibleTopMargin, .flexibleBottomMargin]
+                retryFooter = footer
+            }
+        }
     }
 
     private func setupNavigationBar() {

@@ -8,11 +8,11 @@
 
 extension PersistenceStore where Entity == CDMovieSearch {
 
-    func saveMovieSearch(with searchText: String, completion: ((Bool) -> Void)? = nil) {
-        managedObjectContext.performChanges {
+    func saveMovieSearch(with searchText: String, completion: ((Result<Void, Error>) -> Void)? = nil) {
+        do { try openStore() } catch { completion?(.failure(error)); return }
+        managedObjectContext.performChanges(completion: completion) {
             _ = CDMovieSearch.insert(into: self.managedObjectContext,
-                                     searchText: searchText)
-            completion?(true)
+                                     searchText: searchText, createdAt: self.now())
         }
     }
 

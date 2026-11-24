@@ -27,6 +27,14 @@ final class MovieClientTests: XCTestCase {
         try super.tearDownWithError()
     }
 
+    func testIndependentRequestStartsWhileFirstResponseIsPending() {
+        urlSession.holdResponses = true
+        movieClient.getPopularMovies(page: 1) { _ in XCTFail("Response is held") }
+        movieClient.getUpcomingMovies(page: 1) { _ in XCTFail("Response is held") }
+        XCTAssertEqual(urlSession.dataTaskWithRequestCallCount, 2)
+        XCTAssertEqual(urlSession.pendingTasks.map(\.resumeCallCount), [1, 1])
+    }
+
     func testGetPopularMoviesSuccess() throws {
         // Arrange
         let data = MockResponse.movieResult.dataResponse

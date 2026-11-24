@@ -19,33 +19,24 @@ final class MovieSearchLocalDataSource: MovieSearchLocalDataSourceProtocol {
 
     init(store: PersistenceStore<CDMovieSearch>) {
         self.store = store
-        self.store.configureResultsContoller(limit: 5,
-                                             sortDescriptors: CDMovieSearch.defaultSortDescriptors)
-        self.store.delegate = self
+        store.observeSavedChanges { [weak self] in self?.didUpdateMovieSearch?() }
     }
 
     // MARK: - MovieSearchLocalDataSourceProtocol
 
     func getMovieSearches(completion: @escaping (Result<[MovieSearch], Error>) -> Void) {
-        let searches = store.findAll().map { $0.asDomain() }
-        completion(.success(searches))
+        let context = store.createBackgroundContext()
+        context.perform {
+            completion(Result {
+                try self.store.openStore()
+                let request = CDMovieSearch.sortedFetchRequest
+                return try context.fetch(request).map { $0.asDomain() }
+            })
+        }
     }
 
     func save(with searchText: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        store.saveMovieSearch(with: searchText)
-        completion(.success(Void()))
-    }
-
-}
-
-// MARK: - PersistenceStoreDelegate
-
-extension MovieSearchLocalDataSource: PersistenceStoreDelegate {
-
-    func persistenceStore(willUpdateEntity shouldPrepare: Bool) {}
-
-    func persistenceStore(didUpdateEntity update: Bool) {
-        didUpdateMovieSearch?()
+        store.saveMovieSearch(with: searchText, completion: completion)
     }
 
 }

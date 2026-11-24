@@ -6,7 +6,7 @@
 //  Copyright © 2019 Alonso. All rights reserved.
 //
 
-public struct Review: Equatable {
+public struct Review: Equatable, Sendable {
 
     public let id: String
     public let authorName: String

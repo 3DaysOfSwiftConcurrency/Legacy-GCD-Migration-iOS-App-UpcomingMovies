@@ -6,7 +6,7 @@
 //  Copyright © 2019 Alonso. All rights reserved.
 //
 
-public struct List: Equatable {
+public struct List: Equatable, Sendable {
 
     public let id: String
     public let name: String

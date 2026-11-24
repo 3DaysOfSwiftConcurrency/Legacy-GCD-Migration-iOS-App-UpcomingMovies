@@ -1,5 +1,6 @@
 import UpcomingMoviesDomain
 import UpcomingMoviesData
+import CoreDataInfrastructure
 
 @MainActor
 final class AppModel {
@@ -15,7 +16,7 @@ final class AppModel {
     let customListDetailFeature: CustomListDetailFeature
     let movieCreditsFeature: MovieCreditsFeature
     let movieReviewsFeature: MovieReviewsFeature
-    private var hasLaunched: Bool
+    private static var searchObservation: Task<Void, Never>?
 
     init(upcomingMoviesFeature: UpcomingMoviesFeature,
          searchMoviesFeature: SearchMoviesFeature,
@@ -37,14 +38,27 @@ final class AppModel {
         self.customListDetailFeature = customListDetailFeature
         self.movieCreditsFeature = movieCreditsFeature
         self.movieReviewsFeature = movieReviewsFeature
-        hasLaunched = false
     }
 
-    // Configuration must finish before the splash route can issue a request.
-    func applicationDidFinishLaunching(configuration: BaseConfiguration, remoteDataSource: RemoteDataSourceProtocol) {
-        guard !hasLaunched else { return }
-        remoteDataSource.configure(with: configuration.keys.apiKey, readAccessToken: configuration.keys.readAccessToken)
-        hasLaunched = true
+    // Retain a single startup task, including installation of the search/visit listeners.
+    static func applicationDidFinishLaunching() {
+        guard searchObservation == nil else { return }
+        let preparation = Task {
+            let dependencies = DIContainer.shared
+            let configuration = await prepareLaunchDependencies()
+            let remote: RemoteDataSourceProtocol = dependencies.resolve()
+            remote.configure(with: configuration.keys.apiKey, readAccessToken: configuration.keys.readAccessToken)
+        }
+        searchObservation = SearchMoviesFeature.startObservingChanges(after: preparation) { shared.searchMoviesFeature }
+    }
+
+    private nonisolated static func prepareLaunchDependencies() async -> BaseConfiguration {
+        CoreDataStack.prepareManagedObjectModel()
+        return PropertyListHelper.decode()
+    }
+
+    static func waitForStartup() async {
+        await searchObservation?.value
     }
 
     static func live() -> AppModel {

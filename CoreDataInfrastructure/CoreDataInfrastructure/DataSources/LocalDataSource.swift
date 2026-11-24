@@ -15,29 +15,29 @@ final public class LocalDataSource: LocalDataSourceProtocol {
     // MARK: - Initializers
 
     public init(appGroupExtensions: [String] = []) {
-        self.coreDataStack = CoreDataStack.shared
+        self.coreDataStack = CoreDataStack()
         self.coreDataStack.setExtensionPersistentStoreDescriptions(appGroupExtensions)
     }
 
     // MARK: - LocalDataSourceProtocol
 
     public func genreDataSource() -> GenreLocalDataSourceProtocol {
-        let store: PersistenceStore<CDGenre> = PersistenceStore(self.coreDataStack.persistentContainer)
+        let store: PersistenceStore<CDGenre> = PersistenceStore(coreDataStack.persistentContainer, openStore: coreDataStack.openStore)
         return GenreLocalDataSource(store: store)
     }
 
     public func movieVisitDataSource() -> MovieVisitLocalDataSourceProtocol {
-        let store: PersistenceStore<CDMovieVisit> = PersistenceStore(self.coreDataStack.persistentContainer)
+        let store: PersistenceStore<CDMovieVisit> = PersistenceStore(coreDataStack.persistentContainer, openStore: coreDataStack.openStore)
         return MovieVisitLocalDataSource(store: store)
     }
 
     public func movieSearchDataSource() -> MovieSearchLocalDataSourceProtocol {
-        let store: PersistenceStore<CDMovieSearch> = PersistenceStore(self.coreDataStack.persistentContainer)
+        let store: PersistenceStore<CDMovieSearch> = PersistenceStore(coreDataStack.persistentContainer, openStore: coreDataStack.openStore)
         return MovieSearchLocalDataSource(store: store)
     }
 
     public func userDataSource() -> UserLocalDataSourceProtocol {
-        let store: PersistenceStore<CDUser> = PersistenceStore(self.coreDataStack.persistentContainer)
+        let store: PersistenceStore<CDUser> = PersistenceStore(coreDataStack.persistentContainer, openStore: coreDataStack.openStore)
         return UserLocalDataSource(store: store)
     }
 

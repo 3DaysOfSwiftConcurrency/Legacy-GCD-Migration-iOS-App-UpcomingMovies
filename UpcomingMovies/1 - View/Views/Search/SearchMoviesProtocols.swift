@@ -29,6 +29,7 @@ protocol SearchMoviesResultViewModelProtocol {
     var viewState: AnyBehaviorBindable<SearchMoviesResultViewState> { get }
     var needsRefresh: AnyPublishBindable<Void> { get }
 
+    var historyError: Error? { get }
     var recentSearchCells: [RecentSearchCellViewModelProtocol] { get }
     var movieCells: [MovieListCellViewModelProtocol] { get }
 
@@ -59,6 +60,7 @@ protocol SearchOptionsViewModelProtocol {
     var selectedMovieGenre: PublishBindable<(Int, String)> { get }
     var selectedRecentlyVisitedMovie: PublishBindable<(Int, String)> { get }
 
+    var historyError: Error? { get }
     var visitedMovieCells: [VisitedMovieCellViewModelProtocol] { get }
     var genreCells: [GenreSearchOptionCellViewModelProtocol] { get }
 

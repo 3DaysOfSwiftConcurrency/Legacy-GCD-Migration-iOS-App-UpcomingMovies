@@ -17,6 +17,9 @@ final class SignInFeature {
     private let userUseCase: UserUseCaseProtocol
 
     private var authorizationURLTask: Task<URL, Error>?
+    private var pendingUser: User?
+    var needsSaveRetry: Bool { pendingUser != nil }
+
     private var signInTask: Task<User, Error>?
 
     init(authUseCase: AuthUseCaseProtocol,
@@ -64,12 +67,19 @@ final class SignInFeature {
                 self.signInTask = nil
             }
 
-            let user = try await withCheckedThrowingContinuation { continuation in
-                self.authUseCase.signInUser { result in
-                    continuation.resume(with: result)
+            let user: User
+            if let pendingUser = self.pendingUser {
+                user = pendingUser
+            } else {
+                user = try await withCheckedThrowingContinuation { continuation in
+                    self.authUseCase.signInUser { continuation.resume(with: $0) }
                 }
+                self.pendingUser = user
             }
-            self.userUseCase.saveUser(user)
+            try await withCheckedThrowingContinuation { continuation in
+                self.userUseCase.saveUser(user) { continuation.resume(with: $0) }
+            }
+            self.pendingUser = nil
             return user
         }
 

@@ -5,7 +5,7 @@
 //  Created by Alonso on 18/06/22.
 //
 
-@testable import UpcomingMoviesDomain
+import UpcomingMoviesDomain
 
 final class MovieVisitLocalDataSourceProtocolMock: MovieVisitLocalDataSourceProtocol {
 

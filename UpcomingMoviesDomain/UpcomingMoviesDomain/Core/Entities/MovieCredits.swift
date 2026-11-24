@@ -6,7 +6,7 @@
 //  Copyright © 2019 Alonso. All rights reserved.
 //
 
-public struct MovieCredits {
+public struct MovieCredits: Sendable {
 
     public let cast: [Cast]
     public let crew: [Crew]

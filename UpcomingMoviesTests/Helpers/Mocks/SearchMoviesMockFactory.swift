@@ -24,11 +24,12 @@ final class SearchMoviesUseCaseMock: MovieSearchUseCaseProtocol {
         getMovieSearchesCallCount += 1
     }
 
+    var onSave: ((String, @escaping (Result<Void, Error>) -> Void) -> Void)?
     private(set) var saveSearchTextCallCount = 0
 
     func save(with searchText: String, completion: @escaping (Result<Void, Error>) -> Void) {
-        completion(.success(()))
         saveSearchTextCallCount += 1
+        if let onSave { onSave(searchText, completion) } else { completion(.success(())) }
     }
 }
 
@@ -68,14 +69,16 @@ final class SearchMoviesFeatureTestDependencies {
     let genreUseCase = GenreUseCaseProtocolMock()
 
     @MainActor
-    func makeFeature() -> SearchMoviesFeature {
-        SearchMoviesFeature(
+    func makeFeature(observeHistory: Bool = true) -> SearchMoviesFeature {
+        let feature = SearchMoviesFeature(
             movieUseCase: movieUseCase,
             movieSearchUseCase: movieSearchUseCase,
             movieVisitUseCase: movieVisitUseCase,
             genreUseCase: genreUseCase,
             authenticationHandler: SearchAuthenticationHandlerMock()
         )
+        if observeHistory { feature.observeHistoryChanges() }
+        return feature
     }
 }
 
@@ -107,6 +110,7 @@ final class MockSearchOptionsViewModel: SearchOptionsViewModelProtocol {
 
     var selectedRecentlyVisitedMovie: PublishBindable<(Int, String)> = .init()
 
+    var historyError: Error?
     var visitedMovieCells: [VisitedMovieCellViewModelProtocol] = .init()
 
     var genreCells: [GenreSearchOptionCellViewModelProtocol] = .init()

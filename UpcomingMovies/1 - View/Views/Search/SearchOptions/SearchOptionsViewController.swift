@@ -52,6 +52,9 @@ final class SearchOptionsViewController: UITableViewController, Storyboarded {
 
     private func reloadTableView() {
         setupDataSource()
+        tableView.tableFooterView = viewModel?.historyError.map { error in
+            FooterView.retryFooter(for: error) { [weak self] in self?.viewModel?.loadVisitedMovies() }
+        }
         tableView.reloadData()
     }
 

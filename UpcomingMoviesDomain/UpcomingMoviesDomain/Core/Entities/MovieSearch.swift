@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct MovieSearch {
+public struct MovieSearch: Sendable {
 
     public let id: String
     public let searchText: String

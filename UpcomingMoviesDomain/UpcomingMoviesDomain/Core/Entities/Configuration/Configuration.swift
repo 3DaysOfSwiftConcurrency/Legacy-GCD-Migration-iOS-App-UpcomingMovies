@@ -6,10 +6,10 @@
 //  Copyright © 2020 Alonso. All rights reserved.
 //
 
-public struct Configuration {
+public struct Configuration: Sendable {
 
-    public private(set) var imagesConfiguration: ImagesConfiguration
-    public private(set) var sortConfiguration: SortConfiguration
+    public let imagesConfiguration: ImagesConfiguration
+    public let sortConfiguration: SortConfiguration
 
     public init(imagesConfiguration: ImagesConfiguration, sortConfiguration: SortConfiguration) {
         self.imagesConfiguration = imagesConfiguration

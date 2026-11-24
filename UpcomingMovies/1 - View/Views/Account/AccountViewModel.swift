@@ -13,7 +13,6 @@ final class AccountViewModel: AccountViewModelProtocol {
     private let accountFeature: AccountFeature
 
     let showAuthPermission = PublishBindable<URL>().eraseToAnyBindable()
-    let didUpdateAuthenticationState = BehaviorBindable<AuthenticationState?>(nil).eraseToAnyBindable()
     let didReceiveError = PublishBindable<Void>().eraseToAnyBindable()
 
     var title: String? { LocalizedStrings.accountTabBarTitle() }
@@ -24,14 +23,16 @@ final class AccountViewModel: AccountViewModelProtocol {
 
     init(accountFeature: AccountFeature) {
         self.accountFeature = accountFeature
-
-        didUpdateAuthenticationState.value = isUserSignedIn() ? .currentlySignedIn : .currentlySignedOut
     }
 
     // MARK: - AccountViewModelProtocol
 
     func isUserSignedIn() -> Bool {
         currentUser() != nil
+    }
+
+    func loadCurrentUser() async throws -> UserProtocol? {
+        try await accountFeature.loadCurrentUser()
     }
 
     func currentUser() -> UserProtocol? {

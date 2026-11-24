@@ -67,6 +67,9 @@ final class ProfileViewController: UITableViewController, Storyboarded {
     // MARK: - Reactive Behavior
 
     private func setupBindables() {
+        viewModel?.didReceiveError.bind({ [weak self] message in
+            self?.view.showFailureToast(withMessage: message)
+        }, on: .main)
         viewModel?.reloadAccountInfo.bind({ [weak self] _ in
             guard let self = self else { return }
             self.reloadAccountInfo()

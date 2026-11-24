@@ -6,6 +6,7 @@
 //  Copyright © 2018 Alonso. All rights reserved.
 //
 
+import Combine
 import Foundation
 
 @MainActor
@@ -15,7 +16,11 @@ final class UpcomingMoviesViewModel: UpcomingMoviesViewModelProtocol, SimpleView
 
     private let upcomingMoviesFeature: UpcomingMoviesFeature
     private let factory: UpcomingMoviesFactoryProtocol
-    private var loadTasks: [Int: Task<Void, Never>] = [:]
+    private var currentLoad: (page: Int, task: Task<Void, Never>)?
+    private var modeSubscription: AnyCancellable?
+    private var loadGeneration = 0
+
+    deinit { currentLoad?.task.cancel() }
 
     // MARK: - Reactive properties
 
@@ -47,6 +52,9 @@ final class UpcomingMoviesViewModel: UpcomingMoviesViewModelProtocol, SimpleView
          factory: UpcomingMoviesFactoryProtocol) {
         self.upcomingMoviesFeature = upcomingMoviesFeature
         self.factory = factory
+        modeSubscription = upcomingMoviesFeature.modeChanges.sink { [weak self] mode in
+            self?.didUpdatePresentationMode.send(mode)
+        }
     }
 
     // MARK: - UpcomingMoviesViewModelProtocol
@@ -72,35 +80,43 @@ final class UpcomingMoviesViewModel: UpcomingMoviesViewModelProtocol, SimpleView
     }
 
     func updatePresentationMode() {
-        didUpdatePresentationMode.send(upcomingMoviesFeature.togglePresentationMode())
+        _ = upcomingMoviesFeature.togglePresentationMode()
     }
 
     // MARK: - Private
 
     private func loadMovies(page: Int, showLoader: Bool) -> Task<Void, Never> {
-        if let loadTask = loadTasks[page] {
-            return loadTask
+        if let currentLoad, currentLoad.page == page, !currentLoad.task.isCancelled {
+            return currentLoad.task
         }
 
-        startLoading.value = showLoader
+        currentLoad?.task.cancel()
+        loadGeneration += 1
+        let generation = loadGeneration
         let upcomingMoviesFeature = self.upcomingMoviesFeature
         let loadTask = Task { [weak self] in
-            defer { self?.loadTasks[page] = nil }
+            defer {
+                if let self, self.loadGeneration == generation {
+                    self.currentLoad = nil
+                    self.startLoading.value = false
+                }
+            }
             do {
                 let movies = try await upcomingMoviesFeature.loadMovies(page: page)
-                guard let self else { return }
+                guard let self, self.loadGeneration == generation, !Task.isCancelled else { return }
                 self.viewState.value = self.processResult(movies,
                                                           currentPage: page,
                                                           currentEntities: self.movies)
             } catch is CancellationError {
                 // A newer load is already responsible for publishing the screen state.
             } catch {
-                self?.viewState.value = .error(error)
+                guard let self, self.loadGeneration == generation, !Task.isCancelled else { return }
+                self.viewState.value = .error(error)
             }
-            self?.startLoading.value = false
         }
 
-        loadTasks[page] = loadTask
+        currentLoad = (page, loadTask)
+        startLoading.value = showLoader
         return loadTask
     }
 

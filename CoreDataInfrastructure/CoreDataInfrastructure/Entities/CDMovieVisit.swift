@@ -16,12 +16,12 @@ final class CDMovieVisit: NSManagedObject {
     @NSManaged private(set) var posterPath: String
     @NSManaged private(set) var createdAt: Date
 
-    static func insert(into context: NSManagedObjectContext, id: Int, title: String, posterPath: String) -> CDMovieVisit {
+    static func insert(into context: NSManagedObjectContext, id: Int, title: String, posterPath: String, createdAt: Date) -> CDMovieVisit {
         let movieVisit: CDMovieVisit = context.insertObject()
         movieVisit.id = id
         movieVisit.title = title
         movieVisit.posterPath = posterPath
-        movieVisit.createdAt = Date()
+        movieVisit.createdAt = createdAt
         return movieVisit
     }
 

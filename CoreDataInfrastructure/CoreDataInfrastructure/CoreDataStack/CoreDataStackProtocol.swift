@@ -11,6 +11,8 @@ protocol CoreDataStackProtocol {
 
     var persistentContainer: NSPersistentContainer { get }
 
+    func openStore() throws
+
     func setExtensionPersistentStoreDescriptions(_ groupExtensionIds: [String])
 
 }

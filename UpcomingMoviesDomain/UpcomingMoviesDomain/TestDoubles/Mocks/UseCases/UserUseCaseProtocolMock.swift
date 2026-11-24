@@ -18,9 +18,11 @@ public final class UserUseCaseProtocolMock: UserUseCaseProtocol {
         return findResult
     }
 
+    public var saveResult: Result<Void, Error> = .success(())
     private(set) var saveUserCallCount = 0
-    public func saveUser(_ user: User) {
+    public func saveUser(_ user: User, completion: @escaping (Result<Void, Error>) -> Void) {
         saveUserCallCount += 1
+        completion(saveResult)
     }
 
 }

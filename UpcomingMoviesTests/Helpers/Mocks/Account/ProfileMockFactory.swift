@@ -15,7 +15,7 @@ final class MockProfileViewModel: ProfileViewModelProtocol {
 
     var reloadAccountInfo = PublishBindable<Void>().eraseToAnyBindable()
     var didUpdateAuthenticationState = BehaviorBindable<AuthenticationState?>(nil).eraseToAnyBindable()
-    var didReceiveError = PublishBindable<Void>().eraseToAnyBindable()
+    var didReceiveError = PublishBindable<String>().eraseToAnyBindable()
 
     var signOutTitle: String? = "Sign out"
     var signOutConfirmationTitle: String? = "Sign Out Confirmation"

@@ -6,7 +6,7 @@
 //  Copyright © 2018 Alonso. All rights reserved.
 //
 
-public struct Genre: Equatable {
+public struct Genre: Equatable, Sendable {
 
     public let id: Int
     public let name: String

@@ -9,12 +9,17 @@
 import Foundation
 
 /// Owns the account tab's current-user capability.
+@MainActor
 final class AccountFeature {
 
     private let authHandler: AuthenticationHandlerProtocol
 
     init(authHandler: AuthenticationHandlerProtocol) {
         self.authHandler = authHandler
+    }
+
+    func loadCurrentUser() async throws -> UserProtocol? {
+        try await authHandler.loadCurrentUser()
     }
 
     func currentUser() -> UserProtocol? {

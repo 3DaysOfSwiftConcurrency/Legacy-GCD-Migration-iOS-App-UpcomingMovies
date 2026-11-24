@@ -36,7 +36,8 @@ final class ProfileFeature {
                     continuation.resume(with: result)
                 }
             }
-            self.userUseCase.saveUser(user)
+            // Refresh succeeded; caching the profile is best effort.
+            self.userUseCase.saveUser(user) { _ in }
             return UserModel(user)
         }
         accountDetailTask = task

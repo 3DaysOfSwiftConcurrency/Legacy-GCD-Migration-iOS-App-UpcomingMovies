@@ -14,7 +14,7 @@ protocol ProfileViewModelProtocol {
 
     var reloadAccountInfo: AnyPublishBindable<Void> { get }
     var didUpdateAuthenticationState: AnyBehaviorBindable<AuthenticationState?> { get }
-    var didReceiveError: AnyPublishBindable<Void> { get }
+    var didReceiveError: AnyPublishBindable<String> { get }
 
     var signOutTitle: String? { get }
     var signOutConfirmationTitle: String? { get }

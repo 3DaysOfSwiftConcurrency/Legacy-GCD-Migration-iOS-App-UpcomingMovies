@@ -21,11 +21,17 @@ final class AccountRemoteDataSource: AccountRemoteDataSourceProtocol {
     }
 
     func getFavoriteList(page: Int?, sortBy: MovieSortType.Favorite, completion: @escaping (Result<[UpcomingMoviesDomain.Movie], Error>) -> Void) {
-        guard let account = authManager.userAccount else { return }
+        guard let account = authManager.userAccount else {
+            completion(.failure(APIError.notAuthenticated))
+            return
+        }
         client.getFavoriteList(page: page ?? 1, sortBy: sortBy, sessionId: account.sessionId, accountId: account.accountId, completion: { result in
             switch result {
             case .success(let movieResult):
-                guard let movieResult = movieResult else { return }
+                guard let movieResult = movieResult else {
+                    completion(.failure(APIError.invalidData))
+                    return
+                }
                 let movies = movieResult.results.map { $0.asDomain() }
                 completion(.success(movies))
             case .failure(let error):
@@ -35,11 +41,17 @@ final class AccountRemoteDataSource: AccountRemoteDataSourceProtocol {
     }
 
     func getWatchlist(page: Int?, sortBy: MovieSortType.Watchlist, completion: @escaping (Result<[UpcomingMoviesDomain.Movie], Error>) -> Void) {
-        guard let account = authManager.userAccount else { return }
+        guard let account = authManager.userAccount else {
+            completion(.failure(APIError.notAuthenticated))
+            return
+        }
         client.getWatchlist(page: page ?? 1, sortBy: sortBy, sessionId: account.sessionId, accountId: account.accountId, completion: { result in
             switch result {
             case .success(let movieResult):
-                guard let movieResult = movieResult else { return }
+                guard let movieResult = movieResult else {
+                    completion(.failure(APIError.invalidData))
+                    return
+                }
                 let movies = movieResult.results.map { $0.asDomain() }
                 completion(.success(movies))
             case .failure(let error):
@@ -51,12 +63,16 @@ final class AccountRemoteDataSource: AccountRemoteDataSourceProtocol {
     func getRecommendedList(page: Int?, completion: @escaping (Result<[UpcomingMoviesDomain.Movie], Error>) -> Void) {
         guard let accountId = authManager.accessToken?.accountId,
               let accessToken = authManager.accessToken?.token else {
+            completion(.failure(APIError.notAuthenticated))
             return
         }
         client.getRecommendedList(page: page ?? 1, accessToken: accessToken, accountId: accountId) { result in
             switch result {
             case .success(let movieResult):
-                guard let movieResult = movieResult else { return }
+                guard let movieResult = movieResult else {
+                    completion(.failure(APIError.invalidData))
+                    return
+                }
                 let movies = movieResult.results.map { $0.asDomain() }
                 completion(.success(movies))
             case .failure(let error):
@@ -68,12 +84,16 @@ final class AccountRemoteDataSource: AccountRemoteDataSourceProtocol {
     func getCustomLists(page: Int?, completion: @escaping (Result<[UpcomingMoviesDomain.List], Error>) -> Void) {
         guard let accountId = authManager.accessToken?.accountId,
               let accessToken = authManager.accessToken?.token else {
+            completion(.failure(APIError.notAuthenticated))
             return
         }
         client.getCustomLists(page: page ?? 1, accessToken: accessToken, accountId: accountId, completion: { result in
             switch result {
             case .success(let listResult):
-                guard let listResult = listResult else { return }
+                guard let listResult = listResult else {
+                    completion(.failure(APIError.invalidData))
+                    return
+                }
                 let lists = listResult.results.map { $0.asDomain() }
                 completion(.success(lists))
             case .failure(let error):
@@ -83,11 +103,17 @@ final class AccountRemoteDataSource: AccountRemoteDataSourceProtocol {
     }
 
     func getCustomListMovies(listId: String, completion: @escaping (Result<[UpcomingMoviesDomain.Movie], Error>) -> Void) {
-        guard let accessToken = authManager.accessToken?.token else { return }
+        guard let accessToken = authManager.accessToken?.token else {
+            completion(.failure(APIError.notAuthenticated))
+            return
+        }
         client.getCustomListMovies(with: accessToken, listId: listId, completion: { result in
             switch result {
             case .success(let movieResult):
-                guard let movieResult = movieResult else { return }
+                guard let movieResult = movieResult else {
+                    completion(.failure(APIError.invalidData))
+                    return
+                }
                 let movies = movieResult.results.map { $0.asDomain() }
                 completion(.success(movies))
             case .failure(let error):
@@ -97,7 +123,10 @@ final class AccountRemoteDataSource: AccountRemoteDataSourceProtocol {
     }
 
     func getAccountDetail(completion: @escaping (Result<UpcomingMoviesDomain.User, Error>) -> Void) {
-        guard let account = authManager.userAccount else { return }
+        guard let account = authManager.userAccount else {
+            completion(.failure(APIError.notAuthenticated))
+            return
+        }
         client.getAccountDetail(with: account.sessionId, completion: { result in
             switch result {
             case .success(let user):
@@ -109,7 +138,10 @@ final class AccountRemoteDataSource: AccountRemoteDataSourceProtocol {
     }
 
     func markMovieAsFavorite(movieId: Int, favorite: Bool, completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard let account = authManager.userAccount else { return }
+        guard let account = authManager.userAccount else {
+            completion(.failure(APIError.notAuthenticated))
+            return
+        }
         client.markAsFavorite(movieId, sessionId: account.sessionId, accountId: account.accountId, favorite: favorite, completion: { result in
             switch result {
             case .success:
@@ -121,7 +153,10 @@ final class AccountRemoteDataSource: AccountRemoteDataSourceProtocol {
     }
 
     func addToWatchlist(movieId: Int, watchlist: Bool, completion: @escaping (Result<Bool, Error>) -> Void) {
-        guard let account = authManager.userAccount else { return }
+        guard let account = authManager.userAccount else {
+            completion(.failure(APIError.notAuthenticated))
+            return
+        }
         client.addToWatchlist(movieId, sessionId: account.sessionId, accountId: account.accountId, watchlist: watchlist, completion: { result in
             switch result {
             case .success:

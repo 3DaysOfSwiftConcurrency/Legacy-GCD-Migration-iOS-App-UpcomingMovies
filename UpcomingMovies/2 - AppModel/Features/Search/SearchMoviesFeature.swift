@@ -7,6 +7,7 @@
 
 import Combine
 import Foundation
+import OSLog
 import UpcomingMoviesDomain
 
 /// Owns Search's domain operations and their shared in-flight work.
@@ -28,8 +29,8 @@ final class SearchMoviesFeature {
     private var genresTask: Task<[GenreProtocol], Error>?
     private var movieVisitsTask: Task<[MovieVisitProtocol], Error>?
 
-    private var queuedSearchSaveTask: Task<Void, Never>?
-    private var queuedSearchSaveIdentifier: UUID?
+    private var queuedSearchSaveTask: Task<Result<Void, Error>, Never>?
+    private var searchSaveGeneration = 0
 
     private let movieSearchesDidChangeSubject = PassthroughSubject<Void, Never>()
     var movieSearchesDidChange: AnyPublisher<Void, Never> { movieSearchesDidChangeSubject.eraseToAnyPublisher() }
@@ -47,7 +48,19 @@ final class SearchMoviesFeature {
         self.genreUseCase = genreUseCase
         self.authenticationHandler = authenticationHandler
 
-        self.movieSearchUseCase.didUpdateMovieSearch = { [weak self] in
+    }
+
+    /// The startup signal is synchronous; callbacks are attached without opening the store.
+    static func startObservingChanges(after preparation: Task<Void, Never>,
+                                      feature: @escaping @MainActor () -> SearchMoviesFeature) -> Task<Void, Never> {
+        Task {
+            await preparation.value
+            feature().observeHistoryChanges()
+        }
+    }
+
+    func observeHistoryChanges() {
+        movieSearchUseCase.didUpdateMovieSearch = { [weak self] in
             Task { @MainActor [weak self] in
                 self?.movieSearchesDidChangeSubject.send(())
             }
@@ -63,7 +76,7 @@ final class SearchMoviesFeature {
     func searchMovies(searchText: String) async throws -> [MovieProtocol] {
         let searchRequest = SearchRequest(
             searchText: searchText,
-            includesAdultResults: authenticationHandler.currentUser()?.includeAdult ?? false
+            includesAdultResults: try await authenticationHandler.loadCurrentUser()?.includeAdult ?? false
         )
 
         if let searchTask = searchTasksByRequest[searchRequest] {
@@ -149,26 +162,28 @@ final class SearchMoviesFeature {
         return try await loadTask.value
     }
 
-    /// Saves every distinct search in input order, matching the previous UI behaviour.
-    func recordSearchText(_ searchText: String) {
-        let precedingSaveTask = queuedSearchSaveTask
-        let saveIdentifier = UUID()
-
-        let movieSearchUseCase = movieSearchUseCase
-        let saveTask = Task { [weak self, movieSearchUseCase] in
-            await precedingSaveTask?.value
-
-            await withCheckedContinuation { continuation in
-                movieSearchUseCase.save(with: searchText) { _ in
-                    continuation.resume()
-                }
+    /// Every admitted save, including an identical query, represents a history event.
+    /// The screen need not wait: history failure must not interrupt movie search.
+    @discardableResult
+    func recordSearchText(_ searchText: String) -> Task<Result<Void, Error>, Never> {
+        let predecessor = queuedSearchSaveTask
+        searchSaveGeneration += 1
+        let generation = searchSaveGeneration
+        let task = Task { [weak self, movieSearchUseCase] in
+            _ = await predecessor?.value
+            let result: Result<Void, Error> = await withCheckedContinuation { continuation in
+                movieSearchUseCase.save(with: searchText) { continuation.resume(returning: $0) }
             }
-
-            self?.clearQueuedSearchSaveTask(identifiedBy: saveIdentifier)
+            if case .failure(let error) = result {
+                Logger().error("Could not save search history: \(error.localizedDescription, privacy: .private)")
+            }
+            if self?.searchSaveGeneration == generation {
+                self?.queuedSearchSaveTask = nil
+            }
+            return result
         }
-
-        queuedSearchSaveTask = saveTask
-        queuedSearchSaveIdentifier = saveIdentifier
+        queuedSearchSaveTask = task
+        return task
     }
 
     private func requestMovies(for request: SearchRequest) async throws -> [MovieProtocol] {
@@ -215,14 +230,7 @@ final class SearchMoviesFeature {
         }
     }
 
-    private func clearQueuedSearchSaveTask(identifiedBy saveIdentifier: UUID) {
-        guard queuedSearchSaveIdentifier == saveIdentifier else {
-            return
-        }
 
-        queuedSearchSaveTask = nil
-        queuedSearchSaveIdentifier = nil
-    }
 }
 
 private struct SearchRequest: Hashable {

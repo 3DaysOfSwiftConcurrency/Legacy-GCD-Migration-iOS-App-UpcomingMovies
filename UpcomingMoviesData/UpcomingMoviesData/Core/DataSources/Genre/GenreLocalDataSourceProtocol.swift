@@ -14,6 +14,6 @@ public protocol GenreLocalDataSourceProtocol: AnyObject {
 
     func saveGenres(_ genres: [Genre])
     func find(with id: Int) -> Genre?
-    func findAll() -> [Genre]
+    func restoreGenres(completion: @escaping ([Genre]) -> Void)
 
 }

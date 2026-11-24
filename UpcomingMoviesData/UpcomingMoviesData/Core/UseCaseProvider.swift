@@ -13,8 +13,11 @@ public class UseCaseProvider: UseCaseProviderProtocol {
     private let localDataSource: LocalDataSourceProtocol
     private let remoteDataSource: RemoteDataSourceProtocol
 
+    private let genres: GenreRepository
+
     public init(localDataSource: LocalDataSourceProtocol,
                 remoteDataSource: RemoteDataSourceProtocol) {
+        genres = GenreRepository(localDataSource: localDataSource.genreDataSource(), remoteDataSource: remoteDataSource.genreDataSource())
         self.localDataSource = localDataSource
         self.remoteDataSource = remoteDataSource
     }
@@ -25,10 +28,7 @@ public class UseCaseProvider: UseCaseProviderProtocol {
     }
 
     public func genreUseCase() -> GenreUseCaseProtocol {
-        let localDataSource = localDataSource.genreDataSource()
-        let remoteDataSource = remoteDataSource.genreDataSource()
-        return GenreRepository(localDataSource: localDataSource,
-                               remoteDataSource: remoteDataSource)
+        genres
     }
 
     public func movieVisitUseCase() -> MovieVisitUseCaseProtocol {

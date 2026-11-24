@@ -8,21 +8,11 @@
 
 import CoreData
 
-protocol PersistenceStoreDelegate: AnyObject {
-
-    func persistenceStore(willUpdateEntity shouldPrepare: Bool)
-    func persistenceStore(didUpdateEntity update: Bool)
-
-}
-
-class PersistenceStore<Entity: NSManagedObject>: NSObject, NSFetchedResultsControllerDelegate {
+class PersistenceStore<Entity: NSManagedObject> {
 
     private let persistentContainer: NSPersistentContainer
 
-    private var fetchedResultsController: NSFetchedResultsController<Entity>!
-    private var changeTypes: [NSFetchedResultsChangeType]!
-
-    weak var delegate: PersistenceStoreDelegate?
+    private var saveObserver: NSObjectProtocol?
 
     var managedObjectContext: NSManagedObjectContext {
         persistentContainer.viewContext
@@ -34,64 +24,32 @@ class PersistenceStore<Entity: NSManagedObject>: NSObject, NSFetchedResultsContr
 
     // MARK: - Initializers
 
-    init(_ persistentContainer: NSPersistentContainer) {
+    let now: () -> Date
+    let openStore: () throws -> Void
+
+    init(_ persistentContainer: NSPersistentContainer, now: @escaping () -> Date = Date.init,
+         openStore: @escaping () throws -> Void = {}) {
+        self.now = now
+        self.openStore = openStore
         self.persistentContainer = persistentContainer
-        super.init()
     }
 
-    // MARK: - Internal
-
-    func configureResultsContoller(batchSize: Int = 5, limit: Int = 0,
-                                   sortDescriptors: [NSSortDescriptor] = [],
-                                   predicate: NSPredicate? = nil,
-                                   notifyChangesOn changeTypes: [NSFetchedResultsChangeType] = [.insert, .delete, .move, .update]) {
-        guard let entityName = Entity.entity().name else { fatalError() }
-
-        let request =  NSFetchRequest<Entity>(entityName: entityName)
-        request.fetchBatchSize = batchSize
-        request.fetchLimit = limit
-        request.predicate = predicate
-        request.sortDescriptors = sortDescriptors
-        request.returnsObjectsAsFaults = false
-
-        self.changeTypes = changeTypes
-
-        fetchedResultsController = NSFetchedResultsController(fetchRequest: request,
-                                                              managedObjectContext: managedObjectContext,
-                                                              sectionNameKeyPath: nil,
-                                                              cacheName: nil)
-        fetchedResultsController.delegate = self
-
-        performFetch()
+    deinit {
+        if let saveObserver { NotificationCenter.default.removeObserver(saveObserver) }
     }
 
-    func performFetch() {
-        do {
-            try fetchedResultsController.performFetch()
-        } catch {
-            fatalError(error.localizedDescription)
+    // Consumers reload their own sorted, limited query. Observe committed changes
+    // without fetching rows just to establish an app-wide listener at startup.
+    func observeSavedChanges(insertionsOnly: Bool = false, onChange: @escaping () -> Void) {
+        if let saveObserver { NotificationCenter.default.removeObserver(saveObserver) }
+        let keys = insertionsOnly ? [NSInsertedObjectsKey] : [NSInsertedObjectsKey, NSUpdatedObjectsKey, NSDeletedObjectsKey]
+        saveObserver = NotificationCenter.default.addObserver(forName: .NSManagedObjectContextDidSave,
+                                                              object: managedObjectContext, queue: nil) { notification in
+            let changed = keys.contains { key in
+                let rows = notification.userInfo?[key] as? Set<NSManagedObject>
+                return rows?.contains(where: { $0 is Entity }) == true
+            }
+            if changed { onChange() }
         }
     }
-
-    // MARK: - NSFetchedResultsControllerDelegate
-
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        delegate?.persistenceStore(willUpdateEntity: true)
-    }
-
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>,
-                    didChange anObject: Any,
-                    at indexPath: IndexPath?,
-                    for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        guard changeTypes.contains(type) else { return }
-
-        if anObject as? Entity != nil {
-            delegate?.persistenceStore(didUpdateEntity: true)
-        }
-    }
-
-    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        delegate?.persistenceStore(willUpdateEntity: false)
-    }
-
 }

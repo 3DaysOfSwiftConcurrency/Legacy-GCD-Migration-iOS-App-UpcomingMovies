@@ -19,6 +19,14 @@ final class SearchMoviesResultViewModel: SearchMoviesResultViewModelProtocol {
     private var recentSearchesTask: Task<Void, Never>?
     private var searchMoviesTask: Task<Void, Never>?
 
+    private(set) var historyError: Error?
+    private var currentQuery: String?
+
+    deinit {
+        recentSearchesTask?.cancel()
+        searchMoviesTask?.cancel()
+    }
+
     // MARK: - Reactive properties
 
     let viewState = BehaviorBindable(SearchMoviesResultViewState.recentSearches).eraseToAnyBindable()
@@ -73,14 +81,19 @@ final class SearchMoviesResultViewModel: SearchMoviesResultViewModelProtocol {
             return recentSearchesTask
         }
 
-        let loadTask = Task { [weak self] in
-            guard let self else { return }
-            defer { self.recentSearchesTask = nil }
+        let loadTask = Task { [weak self, searchMoviesFeature] in
+            defer { self?.recentSearchesTask = nil }
+            guard !Task.isCancelled else { return }
 
             do {
-                recentSearches = try await searchMoviesFeature.loadRecentSearches()
+                let searches = try await searchMoviesFeature.loadRecentSearches()
+                try Task.checkCancellation()
+                self?.historyError = nil
+                self?.recentSearches = searches
             } catch {
-                // The existing screen keeps its current recent searches on a failed refresh.
+                guard !Task.isCancelled else { return }
+                self?.historyError = error
+                self?.needsRefresh.send()
             }
         }
 
@@ -89,30 +102,39 @@ final class SearchMoviesResultViewModel: SearchMoviesResultViewModelProtocol {
     }
 
     func searchMovies(withSearchText searchText: String) -> Task<Void, Never> {
-        if let searchMoviesTask {
+        if currentQuery == searchText, let searchMoviesTask, !searchMoviesTask.isCancelled {
             return searchMoviesTask
         }
 
-        viewState.value = .searching
+        searchMoviesTask?.cancel()
+        currentQuery = searchText
         searchMoviesFeature.recordSearchText(searchText)
 
-        let searchTask = Task { [weak self] in
-            guard let self else { return }
-            defer { self.searchMoviesTask = nil }
+        let searchTask = Task { [weak self, searchMoviesFeature] in
+            guard !Task.isCancelled else { return }
+            defer {
+                if !Task.isCancelled { self?.searchMoviesTask = nil }
+            }
 
             do {
                 let movies = try await searchMoviesFeature.searchMovies(searchText: searchText)
-                viewState.value = movies.isEmpty ? .empty : .populated(movies)
+                guard !Task.isCancelled else { return }
+                self?.viewState.value = movies.isEmpty ? .empty : .populated(movies)
             } catch {
-                viewState.value = .error(error)
+                guard !Task.isCancelled else { return }
+                self?.viewState.value = .error(error)
             }
         }
 
         searchMoviesTask = searchTask
+        viewState.value = .searching
         return searchTask
     }
 
     func clearMovies() {
+        searchMoviesTask?.cancel()
+        searchMoviesTask = nil
+        currentQuery = nil
         viewState.value = .recentSearches
     }
 

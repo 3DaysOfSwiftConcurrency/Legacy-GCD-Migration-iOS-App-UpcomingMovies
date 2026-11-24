@@ -29,7 +29,10 @@ final class AuthRemoteDataSource: AuthRemoteDataSourceProtocol {
             switch result {
             case .success(let requestToken):
                 let urlString = String(format: Constants.authURLStringPath, requestToken.token)
-                guard let url = URL(string: urlString) else { return }
+                guard let url = URL(string: urlString) else {
+                    completion(.failure(APIError.invalidData))
+                    return
+                }
                 self.authManager.saveRequestToken(requestToken.token)
                 completion(.success(url))
             case .failure(let error):
@@ -40,7 +43,10 @@ final class AuthRemoteDataSource: AuthRemoteDataSourceProtocol {
 
     func signInUser(completion: @escaping (Result<UpcomingMoviesDomain.User, Error>) -> Void) {
         let readAccessToken = authManager.readAccessToken
-        guard let requestToken = authManager.requestToken else { return }
+        guard let requestToken = authManager.requestToken else {
+            completion(.failure(APIError.notAuthenticated))
+            return
+        }
         authClient.getAccessToken(with: readAccessToken, requestToken: requestToken) { result in
             switch result {
             case .success(let accessToken):

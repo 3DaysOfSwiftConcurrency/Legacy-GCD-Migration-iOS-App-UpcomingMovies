@@ -51,7 +51,7 @@ final class SearchOptionsDataSource: NSObject, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(with: RecentlyVisitedMoviesTableViewCell.self, for: indexPath)
         cell.selectionStyle = .none
         cell.delegate = self
-        cell.viewModel = viewModel.buildRecentlyVisitedMoviesCell()
+        cell.configure(posterURLs: viewModel.buildRecentlyVisitedMoviesCell().visitedMovieCells.map(\.posterURL))
         return cell
     }
 

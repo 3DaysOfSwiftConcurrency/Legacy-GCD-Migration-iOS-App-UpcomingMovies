@@ -6,7 +6,7 @@
 //  Copyright © 2018 Alonso. All rights reserved.
 //
 
-public struct Movie: Equatable {
+public struct Movie: Equatable, Sendable {
 
     public let id: Int
     public let title: String
@@ -43,7 +43,7 @@ public struct Movie: Equatable {
 
 extension Movie {
 
-    public struct AccountState: Equatable {
+    public struct AccountState: Equatable, Sendable {
 
         public let favorite: Bool
         public let watchlist: Bool
