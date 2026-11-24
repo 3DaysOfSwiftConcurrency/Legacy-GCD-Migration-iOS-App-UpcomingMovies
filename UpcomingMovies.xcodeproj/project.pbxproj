@@ -2037,8 +2037,8 @@
 				E225889F2243120000E1327E /* AccountViewController.swift */,
 				E2CF112724A809270048AFC0 /* AccountProtocols.swift */,
 				CFA000000000000000000017 /* Sign In */,
-				E22588A72243280B00E1327E /* UpcomingMovies/1 - View/Views/Account/Profile */,
-				E2254698226AC66900E9042C /* UpcomingMovies/1 - View/Views/Account/Saved Movies */,
+				E22588A72243280B00E1327E /* Profile */,
+				E2254698226AC66900E9042C /* Saved Movies */,
 				E2254699226AC6EF00E9042C /* Custom Lists */,
 				E225469A226AC76200E9042C /* Custom List Detail */,
 				2BDC17BB8CD65C63331B6AC2 /* Authentication */,
@@ -2442,7 +2442,7 @@
 			path = "UpcomingMovies/1 - View/Views/Movies/Movie Credits";
 			sourceTree = SOURCE_ROOT;
 		};
-		E2254698226AC66900E9042C /* UpcomingMovies/1 - View/Views/Account/Saved Movies */ = {
+		E2254698226AC66900E9042C /* Saved Movies */ = {
 			isa = PBXGroup;
 			children = (
 				E276DAD12A6FA59D005A14C1 /* Cells */,
@@ -2504,7 +2504,7 @@
 			path = SectionView;
 			sourceTree = "<group>";
 		};
-		E22588A72243280B00E1327E /* UpcomingMovies/1 - View/Views/Account/Profile */ = {
+		E22588A72243280B00E1327E /* Profile */ = {
 			isa = PBXGroup;
 			children = (
 				E276DAD22A6FA788005A14C1 /* Cells */,
@@ -3243,13 +3243,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-UpcomingMovies/Pods-UpcomingMovies-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-UpcomingMovies/Pods-UpcomingMovies-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
