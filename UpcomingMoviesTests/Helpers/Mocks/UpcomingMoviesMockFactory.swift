@@ -13,10 +13,10 @@ import UIKit
 final class MockUpcomingMoviesLoader {
 
     var upcomingMovies: Result<[Movie], Error>?
-    private(set) var loadCallCount = 0
+    private(set) var requestedPages: [Int] = []
 
     func loadMovies(page: Int, completion: @escaping (Result<[Movie], Error>) -> Void) {
-        loadCallCount += 1
+        requestedPages.append(page)
         if let upcomingMovies {
             completion(upcomingMovies)
         }

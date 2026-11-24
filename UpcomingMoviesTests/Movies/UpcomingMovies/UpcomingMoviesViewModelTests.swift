@@ -75,7 +75,30 @@ final class UpcomingMoviesViewModelTests: XCTestCase {
         XCTAssertEqual(viewModelToTest.viewState.value, .paging(expectedMovies, next: 2))
     }
 
-    func testGetMoviesError() async {
+    func testPrefetchAppendsInOrderAndRefreshReplacesTheListFromPageOne() async {
+        mockMoviesLoader.upcomingMovies = .success([makeMovie(id: 7)])
+        let initialLoad = viewModelToTest.getMovies()
+        XCTAssertTrue(viewModelToTest.startLoading.value)
+        await initialLoad.value
+        XCTAssertFalse(viewModelToTest.startLoading.value)
+        XCTAssertTrue(viewModelToTest.needsPrefetch)
+
+        mockMoviesLoader.upcomingMovies = .success([makeMovie(id: 3)])
+        let prefetch = viewModelToTest.getMovies()
+        XCTAssertFalse(viewModelToTest.startLoading.value)
+        await prefetch.value
+        XCTAssertEqual(viewModelToTest.viewState.value.currentEntities.map(\.id), [7, 3])
+
+        mockMoviesLoader.upcomingMovies = .success([makeMovie(id: 9)])
+        let refresh = viewModelToTest.refreshMovies()
+        XCTAssertFalse(viewModelToTest.startLoading.value)
+        await refresh.value
+        XCTAssertEqual(mockMoviesLoader.requestedPages, [1, 2, 1])
+        XCTAssertEqual(viewModelToTest.viewState.value.currentEntities.map(\.id), [9])
+        XCTAssertEqual(viewModelToTest.viewState.value.currentPage, 2)
+    }
+
+    func testLoadErrorCanBeRetriedFromPageOne() async {
         // Arrange
         let errorToTest = TestError()
         // Act
@@ -83,6 +106,13 @@ final class UpcomingMoviesViewModelTests: XCTestCase {
         await viewModelToTest.getMovies().value
         // Assert
         XCTAssertEqual(viewModelToTest.viewState.value, .error(errorToTest))
+        XCTAssertFalse(viewModelToTest.startLoading.value)
+        XCTAssertFalse(viewModelToTest.needsPrefetch)
+
+        mockMoviesLoader.upcomingMovies = .success([makeMovie(id: 4)])
+        await viewModelToTest.refreshMovies().value
+        XCTAssertEqual(mockMoviesLoader.requestedPages, [1, 1])
+        XCTAssertEqual(viewModelToTest.viewState.value.currentEntities.map(\.id), [4])
     }
 
     func testGetMoviesReusesTheInFlightLoadForTheSamePage() async {
@@ -96,7 +126,7 @@ final class UpcomingMoviesViewModelTests: XCTestCase {
         await secondLoadTask.value
 
         // Assert
-        XCTAssertEqual(mockMoviesLoader.loadCallCount, 1)
+        XCTAssertEqual(mockMoviesLoader.requestedPages, [1])
     }
 
     func testUpcomingMovieCellPosterURL() {
