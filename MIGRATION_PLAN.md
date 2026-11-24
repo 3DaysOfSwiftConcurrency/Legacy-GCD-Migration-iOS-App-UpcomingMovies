@@ -175,3 +175,55 @@ source parse or one converted callback does not justify “migration complete.�
 - Verified so far: source parsing, project plist validation, expected source
   placement and a whitespace review. Build, tests and manual sign-in
   regression remain required before this sub-route checkpoint can be accepted.
+
+## Capability ownership map (Step 3)
+
+Read each row left to right. Screen names below omit the UIKit
+`ViewController` suffix unless stated otherwise. The Feature column names
+the concrete destination, not a claim that its callers already use it.
+A dagger (†) marks an owner to introduce. Existing Features can still have
+legacy use-case, handler and callback dependencies. In the repository column,
+“Movie”, for example, means `MovieRepository` in UpcomingMoviesData.
+TMDB reads and writes go through the corresponding remote data source and
+NetworkInfrastructure client, not directly from a screen.
+
+| Capability / screen | Presentation owner | Concrete Feature | Repository → system |
+| --- | --- | --- | --- |
+| Splash: prepare image configuration and genres before entering tabs | SplashViewModel | LaunchFeature † | Configuration → TMDB configuration; Genre → local genre store / TMDB genres |
+| UpcomingMovies: first page, retry, refresh, prefetch, preview/expanded choice | UpcomingMoviesViewModel | UpcomingMoviesFeature | Movie → TMDB upcoming; preferences repository † → existing UserDefaults presentation-mode key |
+| SearchMovies host, SearchOptions and SearchMoviesResultController: suggestions, query, recent searches and visits | SearchMoviesViewModel † for host; SearchOptionsViewModel and SearchMoviesResultViewModel for children | SearchMoviesFeature | Movie → TMDB search; Genre → cached/remote genres; MovieSearch and MovieVisit → Core Data; shared current user supplies adult-results preference |
+| MovieList: popular, top rated, genre, similar and account recommendations | MovieListViewModel, configured per list | MovieListFeature † | Movie → corresponding TMDB list by page, genre or source movie; Account → recommended list for signed-in account |
+| MovieDetail, including poster, title and options: load detail, resolve genres, record visit, show account state, change favorite/watchlist | MovieDetailViewModel; MovieDetailPoster/Title/OptionsViewModel render child sections | MovieDetailFeature † | Movie → TMDB detail/account state; Genre → genre store; MovieVisit → Core Data; Account → TMDB favorite/watchlist mutations |
+| MovieCredits: cast and crew | MovieCreditsViewModel | MovieCreditsFeature | Movie → TMDB credits |
+| MovieReviews and MovieReviewDetail: page reviews and read selected review | MovieReviewsViewModel; MovieReviewDetailViewModel | MovieReviewsFeature | Movie → TMDB reviews; detail renders the selected value without another fetch |
+| MovieVideos: list trailers and open selected video | MovieVideosViewModel | MovieVideosFeature † | Movie → TMDB videos; controller hands selected URL to iOS |
+| Account: select signed-in profile or sign-in child | AccountViewModel | AccountFeature | Auth → stored session identity; User → local user record |
+| SignIn and AuthPermission: request authorization URL, observe web permission, finish sign-in | SignInViewModel; AuthPermissionViewModel | SignInFeature | Auth → TMDB authorization/session and credential storage; User → local account; permission page stays in the web view |
+| Profile: display account details, choose account sections, sign out | ProfileViewModel | ProfileFeature | Account → TMDB account details; User → local user; Auth → session deletion / Keychain |
+| SavedMovies: favorites and watchlist | SavedMoviesViewModel | SavedMoviesFeature | Account → signed-in TMDB favorites or watchlist |
+| CustomLists: page account lists | CustomListsViewModel | CustomListsFeature | Account → TMDB account lists |
+| CustomListDetail: list header, section and movies | CustomListDetailViewModel; header/section ViewModels render supplied values | CustomListDetailFeature | Account → TMDB list detail by ID |
+
+**Entry points and shared ownership.** MainTabBarController and its
+coordinators select screens; they do not own movie or account data.
+SceneDelegate, the search shortcut, and widget URLs feed this navigation
+boundary (upcoming, search, favorites as supported by DeepLinkDestination).
+The two widget entry views render WidgetKit timeline entries and link into
+the app; neither needs a second movie repository or a fetching ViewModel.
+Keep routing in presentation and deliver launch work once from the lifecycle.
+AppModel.live() will compose shared repositories and concrete Features;
+its three tab properties are upcomingMoviesFeature, searchMoviesFeature and
+accountFeature. Preserve one session identity, genre store and visit history
+across tabs. Search observes visits recorded by detail; saved lists read
+account state changed by detail. Do not add independent writable copies.
+
+**Disposition of the source-placement leads.** Keep Swift sources in place
+until their complete route moves. Scene controllers, coordinators, render
+models, cells, UI helpers, HUD, image loading/transitions and reusable
+ViewComponents belong with presentation. Scene interactors' product decisions
+go to the Feature in the corresponding row; storage, credential and transport
+operations stay behind repositories. AppDelegate/SceneDelegate remain
+lifecycle entry points. DIContainer and assemblies remain transitional
+composition, not Features. Bindables, model protocols, extensions and shared
+handlers must be split or retired by actual consumers rather than classified
+by filename. No new product surface or visual design is implied.

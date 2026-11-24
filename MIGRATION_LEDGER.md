@@ -20,6 +20,10 @@
     {
       "action": "Verified Protect observable behaviour in the Modernizer session.",
       "result": "Host build and tests passed for UpcomingMovies on iPhone 17 Pro."
+    },
+    {
+      "action": "Verified Map CFA feature ownership in the Modernizer session.",
+      "result": "Host build and tests passed for UpcomingMovies on iPhone 17 Pro."
     }
   ],
   "blocker": null,
