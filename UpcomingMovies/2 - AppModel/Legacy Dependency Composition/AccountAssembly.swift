@@ -13,7 +13,7 @@ final class AccountAssembly: Assembly {
 
     func assemble(container: Container) {
         container.register(AccountViewModelProtocol.self) { _ in
-            return MainActor.assumeIsolated {
+            MainActor.assumeIsolated {
                 AccountViewModel(accountFeature: AppModel.shared.accountFeature)
             }
         }

@@ -79,7 +79,7 @@ final class ProfileViewModelTests: XCTestCase {
     }
 
     func testGetAccountDetailError() {
-        //Arrange
+        // Arrange
         let errorToTest = TestError()
         let expectation = XCTestExpectation(description: "Should not reload account info")
         expectation.isInverted = true

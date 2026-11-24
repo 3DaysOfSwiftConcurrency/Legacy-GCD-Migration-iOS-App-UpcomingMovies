@@ -13,7 +13,7 @@ final class MovieReviewsAssembly: Assembly {
 
     func assemble(container: Container) {
         container.register(MovieReviewsViewModelProtocol.self) { (_, movieId: Int, movieTitle: String) in
-            return MainActor.assumeIsolated {
+            MainActor.assumeIsolated {
                 MovieReviewsViewModel(movieId: movieId,
                                       movieTitle: movieTitle,
                                       movieReviewsFeature: AppModel.shared.movieReviewsFeature)

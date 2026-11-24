@@ -59,10 +59,14 @@ final class MovieDetailAssembly: Assembly {
             return MovieDetailUIHelper(progressHUDAdapter: progressHUDAdapter)
         }
 
+        registerDetailComponents(in: container)
+    }
+
+    private func registerDetailComponents(in container: Container) {
         // MARK: - Movie detail poster
 
         container.register(MovieDetailPosterViewModelProtocol.self) { (_, renderContent: MovieDetailPosterRenderContent?) in
-            return MovieDetailPosterViewModel(renderContent)
+            MovieDetailPosterViewModel(renderContent)
         }
 
         // MARK: - Movie detail title
@@ -77,7 +81,7 @@ final class MovieDetailAssembly: Assembly {
         // MARK: - Movie detail options
 
         container.register(MovieDetailOptionsViewModelProtocol.self) { (_, renderContent: MovieDetailOptionsRenderContent?) in
-            return MovieDetailOptionsViewModel(renderContent)
+            MovieDetailOptionsViewModel(renderContent)
         }
     }
 

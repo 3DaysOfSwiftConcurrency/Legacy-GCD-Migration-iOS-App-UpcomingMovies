@@ -49,7 +49,11 @@ final class TransitioningInteractor: UIPercentDrivenInteractiveTransition {
             cancel()
         case .ended:
             transitionInProgress = false
-            shouldCompleteTransition ? finish() : cancel()
+            if shouldCompleteTransition {
+                finish()
+            } else {
+                cancel()
+            }
         case .failed, .possible:
             fallthrough
         @unknown default:

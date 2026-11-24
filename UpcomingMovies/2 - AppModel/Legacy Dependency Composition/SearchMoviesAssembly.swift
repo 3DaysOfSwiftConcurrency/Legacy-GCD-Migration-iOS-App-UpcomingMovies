@@ -14,12 +14,12 @@ final class SearchMoviesAssembly: Assembly {
 
     func assemble(container: Container) {
         container.register(SearchOptionsViewModelProtocol.self) { _ in
-            return MainActor.assumeIsolated {
+            MainActor.assumeIsolated {
                 SearchOptionsViewModel(searchMoviesFeature: AppModel.shared.searchMoviesFeature)
             }
         }
         container.register(SearchMoviesResultViewModelProtocol.self) { _ in
-            return MainActor.assumeIsolated {
+            MainActor.assumeIsolated {
                 SearchMoviesResultViewModel(searchMoviesFeature: AppModel.shared.searchMoviesFeature)
             }
         }

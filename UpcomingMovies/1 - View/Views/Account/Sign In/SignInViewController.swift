@@ -49,7 +49,11 @@ final class SignInViewController: UIViewController, Storyboarded {
     private func setupBindables() {
         viewModel?.startLoading.bind({ [weak self] start in
             guard let self else { return }
-            start ? self.startLoading() : self.stopLoading()
+            if start {
+                self.startLoading()
+            } else {
+                self.stopLoading()
+            }
         }, on: .main)
         viewModel?.didUpdateAuthenticationState.bindAndFire({ [weak self] authState in
             guard let self = self, let authState else { return }

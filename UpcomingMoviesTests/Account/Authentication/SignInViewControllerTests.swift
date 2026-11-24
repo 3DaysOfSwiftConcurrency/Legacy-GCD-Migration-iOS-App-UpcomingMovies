@@ -9,6 +9,7 @@
 import XCTest
 @testable import UpcomingMovies
 
+@MainActor
 final class SignInViewControllerTests: XCTestCase {
 
     private var viewModel: MockSignInViewModel!

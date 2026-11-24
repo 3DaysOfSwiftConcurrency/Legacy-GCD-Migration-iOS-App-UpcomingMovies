@@ -30,7 +30,7 @@ struct AnimatableSettings: AnimatableSettingsProtocol {
 
 private struct AssociatedKeys {
 
-    static var animationAvailable = "UM_animationAvailable"
+    static var animationAvailable: UInt8 = 0
 
 }
 

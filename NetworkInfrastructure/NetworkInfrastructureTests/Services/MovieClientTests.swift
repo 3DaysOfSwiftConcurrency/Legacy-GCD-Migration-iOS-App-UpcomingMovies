@@ -8,7 +8,6 @@
 import XCTest
 @testable import NetworkInfrastructure
 
-// swiftlint:disable all
 final class MovieClientTests: XCTestCase {
 
     private var urlSession: MockURLSession!

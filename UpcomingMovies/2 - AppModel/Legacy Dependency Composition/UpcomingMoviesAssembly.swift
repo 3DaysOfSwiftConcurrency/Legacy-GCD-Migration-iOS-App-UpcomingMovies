@@ -14,7 +14,7 @@ final class UpcomingMoviesAssembly: Assembly {
     func assemble(container: Container) {
         // The UIKit screen resolves these synchronous factories on the main actor.
         container.register(UpcomingMoviesFactoryProtocol.self) { _ in
-            return UpcomingMoviesFactory()
+            UpcomingMoviesFactory()
         }
 
         container.register(UpcomingMoviesViewModelProtocol.self) { resolver in
@@ -28,7 +28,7 @@ final class UpcomingMoviesAssembly: Assembly {
         }
 
         container.register(UpcomingMoviesLayoutProviderProtocol.self) { _ in
-            return UpcomingMoviesLayoutProvider()
+            UpcomingMoviesLayoutProvider()
         }
     }
 

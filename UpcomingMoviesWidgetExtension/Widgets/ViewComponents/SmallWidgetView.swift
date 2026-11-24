@@ -21,7 +21,7 @@ struct SmallWidgetView: View {
                 VStack(alignment: .center, spacing: 16) {
                     Image(systemName: iconName)
                         .resizable()
-                        .aspectRatio(contentMode: .fit)
+                        .scaledToFit()
                         .frame(maxWidth: 25, maxHeight: 25)
                         .foregroundColor(.white)
                         .padding(geometry.size.height * 0.15)

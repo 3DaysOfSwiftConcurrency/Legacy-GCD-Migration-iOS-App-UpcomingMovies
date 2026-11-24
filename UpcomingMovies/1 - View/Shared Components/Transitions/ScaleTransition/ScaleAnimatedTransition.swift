@@ -41,7 +41,11 @@ final class ScaleAnimatedTransition: NSObject, ScaleAnimatedTransitioning {
             return
         }
 
-        isPresenting ? containerView.addSubview(toView) : containerView.insertSubview(toView, belowSubview: fromView)
+        if isPresenting {
+            containerView.addSubview(toView)
+        } else {
+            containerView.insertSubview(toView, belowSubview: fromView)
+        }
 
         let scaleView = isPresenting ? toView : fromView
 

@@ -128,7 +128,7 @@ final class ShrinkingButton: UIButton {
         setTitle("", for: .normal)
         setImage(nil, for: .normal)
 
-        UIView.animate(withDuration: 0.1, animations: { () -> Void in
+        UIView.animate(withDuration: 0.1, animations: {
             self.layer.cornerRadius = self.frame.height / 2
         }, completion: { _ in
             self.shrink()
@@ -144,8 +144,11 @@ final class ShrinkingButton: UIButton {
 
         let id = UUID()
         pendingReverts[id] = Task { @MainActor [weak self] in
-            do { try await Task.sleep(nanoseconds: UInt64(delayToRevert * 1_000_000_000)) }
-            catch { return }
+            do {
+                try await Task.sleep(nanoseconds: UInt64(delayToRevert * 1_000_000_000))
+            } catch {
+                return
+            }
             guard let self else { return }
             self.pendingReverts[id] = nil
             self.setOriginalState { [weak self] in

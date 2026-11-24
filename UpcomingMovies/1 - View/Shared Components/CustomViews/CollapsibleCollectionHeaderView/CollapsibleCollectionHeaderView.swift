@@ -10,6 +10,7 @@ import UIKit
 
 protocol CollapsibleHeaderViewDelegate: AnyObject {
 
+    @MainActor
     func collapsibleHeaderView(sectionHeaderView: CollapsibleCollectionHeaderView, sectionToggled section: Int)
 
 }

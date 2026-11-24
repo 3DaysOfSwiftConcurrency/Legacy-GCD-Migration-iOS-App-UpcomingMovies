@@ -7,9 +7,9 @@
 
 import Foundation
 
-// swiftlint:disable large_tuple
 final class MockURLSession: URLSession {
 
+    // swiftlint:disable:next large_tuple
     var dataTaskWithRequestCompletionHandler: (Data?, URLResponse?, Error?) = (nil, nil, nil)
     var dataTaskWithRequestResult = MockURLSessionDataTask()
     var holdResponses = false

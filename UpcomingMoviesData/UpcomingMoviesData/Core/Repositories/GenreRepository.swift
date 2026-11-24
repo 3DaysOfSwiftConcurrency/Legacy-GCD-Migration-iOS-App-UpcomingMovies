@@ -35,8 +35,11 @@ public final class GenreRepository: GenreUseCaseProtocol {
 
     public func find(with id: Int, completion: @escaping (Result<Genre?, Error>) -> Void) {
         Task { @MainActor in
-            if let current { completion(.success(current.first { $0.id == id })) }
-            else { completion(.success(localDataSource.find(with: id))) }
+            if let current {
+                completion(.success(current.first { $0.id == id }))
+            } else {
+                completion(.success(localDataSource.find(with: id)))
+            }
         }
     }
 

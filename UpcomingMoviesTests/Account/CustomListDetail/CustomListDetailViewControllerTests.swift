@@ -9,6 +9,7 @@
 import XCTest
 @testable import UpcomingMovies
 
+@MainActor
 final class CustomListDetailViewControllerTests: XCTestCase {
 
     private var viewModel: MockCustomListDetailViewModel!

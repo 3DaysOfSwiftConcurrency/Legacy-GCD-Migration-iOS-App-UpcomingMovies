@@ -155,7 +155,11 @@ final class UpcomingMoviesViewController: UIViewController, Storyboarded, Loadin
 
         viewModel?.startLoading.bind({ [weak self] startLoading in
             guard let self = self else { return }
-            startLoading ? self.showLoader() : self.hideLoader()
+            if startLoading {
+                self.showLoader()
+            } else {
+                self.hideLoader()
+            }
         }, on: .main)
 
         viewModel?.didUpdatePresentationMode.bind({ [weak self] presentationMode in

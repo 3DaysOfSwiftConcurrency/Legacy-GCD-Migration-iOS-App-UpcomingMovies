@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 protocol CustomListDetailViewModelProtocol {
 
     var listName: String? { get }

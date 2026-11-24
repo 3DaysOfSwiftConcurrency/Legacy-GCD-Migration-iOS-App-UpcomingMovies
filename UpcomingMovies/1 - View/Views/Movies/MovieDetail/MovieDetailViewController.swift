@@ -159,7 +159,11 @@ final class MovieDetailViewController: UIViewController, Storyboarded, Transitio
     private func setupLoaderBindable() {
         viewModel?.startLoading.bind({ [weak self] start in
             guard let self else { return }
-            start ? self.userInterfaceHelper?.showLoader(in: self.view) : self.userInterfaceHelper?.hideLoader()
+            if start {
+                self.userInterfaceHelper?.showLoader(in: self.view)
+            } else {
+                self.userInterfaceHelper?.hideLoader()
+            }
         }, on: .main)
     }
 

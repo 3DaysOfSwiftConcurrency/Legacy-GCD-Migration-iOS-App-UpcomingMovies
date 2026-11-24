@@ -47,7 +47,7 @@ final class GradientView: UIView {
         }
     }
 
-    override class var layerClass: AnyClass {  CAGradientLayer.self }
+    override static var layerClass: AnyClass {  CAGradientLayer.self }
 
     private var gradientLayer: CAGradientLayer {  layer as! CAGradientLayer }
 

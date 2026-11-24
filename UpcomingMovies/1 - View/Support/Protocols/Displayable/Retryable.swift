@@ -9,7 +9,7 @@
 import UIKit
 
 private struct AssociatedKeys {
-    static var retryView: RetryPlaceHolderable?
+    static var retryView: UInt8 = 0
 }
 
 protocol Retryable: AnyObject {

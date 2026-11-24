@@ -230,7 +230,6 @@ final class SearchMoviesFeature {
         }
     }
 
-
 }
 
 private struct SearchRequest: Hashable {

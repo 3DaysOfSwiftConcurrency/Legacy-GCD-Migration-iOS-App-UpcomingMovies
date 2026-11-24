@@ -30,7 +30,7 @@ extension APIClient {
     typealias JSONTaskCompletionHandler = (Result<Decodable, APIError>) -> Void
 
     private func decodingTask<T: Decodable>(with request: URLRequest,
-                                            decodingType: T.Type,
+                                            decodingType _: T.Type,
                                             completion: @escaping JSONTaskCompletionHandler) {
         NetworkingManager(session: session).start(request) { data, response, _ in
             guard let httpResponse = response as? HTTPURLResponse else {
@@ -47,7 +47,7 @@ extension APIClient {
             }
             do {
                 let decoder = JSONDecoder()
-                let genericModel = try decoder.decode(decodingType, from: data)
+                let genericModel = try decoder.decode(T.self, from: data)
                 completion(.success(genericModel))
             } catch {
                 completion(.failure(.requestFailed))

@@ -13,7 +13,7 @@ final class SignInAssembly: Assembly {
 
     func assemble(container: Container) {
         container.register(SignInViewModelProtocol.self) { _ in
-            return MainActor.assumeIsolated {
+            MainActor.assumeIsolated {
                 SignInViewModel(signInFeature: AppModel.shared.signInFeature)
             }
         }

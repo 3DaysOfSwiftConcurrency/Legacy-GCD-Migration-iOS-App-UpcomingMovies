@@ -25,30 +25,30 @@ class CDGenreStoreTests: XCTestCase {
     }
 
     func testSaveGenre() {
-        //Arrange
+        // Arrange
         let genreToTest = Genre(id: 1, name: "Action")
         let saveExpectation = XCTestExpectation(description: "Save genre")
-        //Act
+        // Act
         storeToTest.saveGenre(genreToTest) { _ in
             let savedGenre = self.storeToTest.find(with: 1)
             XCTAssertNotNil(savedGenre)
             saveExpectation.fulfill()
         }
-        //Assert
+        // Assert
         wait(for: [saveExpectation], timeout: 1.0)
     }
 
     func testFindAllGenres() {
-        //Arrange
+        // Arrange
         let genreToTest = Genre(id: 2, name: "Comedy")
         let saveExpectation = XCTestExpectation(description: "Save genre")
-        //Act
+        // Act
         storeToTest.saveGenre(genreToTest) { _ in
             let allGenres = self.storeToTest.findAll()
             XCTAssertTrue(allGenres.count > 0)
             saveExpectation.fulfill()
         }
-        //Assert
+        // Assert
         wait(for: [saveExpectation], timeout: 1.0)
     }
 

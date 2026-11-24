@@ -9,6 +9,7 @@
 import XCTest
 @testable import UpcomingMovies
 
+@MainActor
 final class ProfileViewControllerTests: XCTestCase {
 
     private var viewModel: MockProfileViewModel!

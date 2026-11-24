@@ -10,7 +10,7 @@ import UIKit
 
 final class SplashBuilder {
 
-    class func buildViewController(navigationHandler: NavigationHandlerProtocol? = nil) -> UIViewController {
+    static func buildViewController(navigationHandler: NavigationHandlerProtocol? = nil) -> UIViewController {
         let viewController = SplashViewController.instantiate()
         viewController.viewModel = DIContainer.shared.resolve()
         viewController.navigationHandler = navigationHandler ?? DIContainer.shared.resolve()

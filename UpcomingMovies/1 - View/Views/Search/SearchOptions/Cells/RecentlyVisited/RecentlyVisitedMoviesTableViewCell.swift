@@ -49,7 +49,6 @@ final class RecentlyVisitedMoviesTableViewCell: UITableViewCell {
         collectionView.registerNib(cellType: VisitedMovieCollectionViewCell.self)
     }
 
-
 }
 
 // MARK: - UICollectionViewDataSource

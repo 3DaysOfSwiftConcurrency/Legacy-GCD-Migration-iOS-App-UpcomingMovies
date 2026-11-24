@@ -70,7 +70,7 @@ final class SearchMoviesResultViewModel: SearchMoviesResultViewModelProtocol {
         self.searchMoviesFeature = searchMoviesFeature
 
         changesSubscription = searchMoviesFeature.movieSearchesDidChange.sink { [weak self] in
-            self?.loadRecentSearches()
+            _ = self?.loadRecentSearches()
         }
     }
 

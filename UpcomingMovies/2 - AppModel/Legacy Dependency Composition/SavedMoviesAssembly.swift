@@ -13,7 +13,7 @@ final class SavedMoviesAssembly: Assembly {
 
     func assemble(container: Container) {
         container.register(SavedMoviesViewModelProtocol.self) { (_, displayTitle: String?) in
-            return MainActor.assumeIsolated {
+            MainActor.assumeIsolated {
                 let collection: SavedMoviesCollection = displayTitle == ProfileOption.watchlist.title ? .watchlist : .favorites
                 let viewModel = SavedMoviesViewModel(savedMoviesFeature: AppModel.shared.savedMoviesFeature, collection: collection)
                 viewModel.displayTitle = displayTitle

@@ -16,7 +16,7 @@ struct RootCoordinatorIdentifier {
 
 final class MainTabBarBuilder {
 
-    class func buildViewCoordinators() -> [RootCoordinator] {
+    static func buildViewCoordinators() -> [RootCoordinator] {
 
         let upcomingMoviesNavigationController = createNavigationController(title: LocalizedStrings.upcomingMoviesTabBarTitle(), image: #imageLiteral(resourceName: "Movies"))
         let upcomingMoviesCoordinator = UpcomingMoviesCoordinator(navigationController: upcomingMoviesNavigationController,
@@ -38,7 +38,7 @@ final class MainTabBarBuilder {
         ]
     }
 
-    class func createNavigationController(title: String, image: UIImage) -> UINavigationController {
+    static func createNavigationController(title: String, image: UIImage) -> UINavigationController {
         let navController = UINavigationController()
         navController.tabBarItem.title = title
         navController.tabBarItem.image = image

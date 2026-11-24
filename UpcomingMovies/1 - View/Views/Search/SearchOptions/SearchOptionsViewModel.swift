@@ -57,7 +57,7 @@ final class SearchOptionsViewModel: SearchOptionsViewModelProtocol {
         self.searchMoviesFeature = searchMoviesFeature
 
         changesSubscription = searchMoviesFeature.movieVisitsDidChange.sink { [weak self] in
-            self?.loadVisitedMovies()
+            _ = self?.loadVisitedMovies()
         }
     }
 

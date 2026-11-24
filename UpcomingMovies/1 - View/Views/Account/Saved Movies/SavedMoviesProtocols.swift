@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 protocol SavedMoviesViewModelProtocol {
 
     var displayTitle: String? { get set }

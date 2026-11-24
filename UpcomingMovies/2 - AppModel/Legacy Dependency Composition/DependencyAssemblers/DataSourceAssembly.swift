@@ -15,11 +15,11 @@ final class DataSourceAssembly: Assembly {
 
     func assemble(container: Container) {
         container.register(LocalDataSource.self) { _ in
-            return LocalDataSource(appGroupExtensions: AppGroup.allCasesIdentifiers)
+            LocalDataSource(appGroupExtensions: AppGroup.allCasesIdentifiers)
         }.inObjectScope(.container)
         .implements(LocalDataSourceProtocol.self)
         container.register(RemoteDataSourceProtocol.self) { _ in
-            return RemoteDataSource()
+            RemoteDataSource()
         }.inObjectScope(.container)
     }
 

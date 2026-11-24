@@ -8,6 +8,7 @@
 
 import UIKit
 
+@MainActor
 protocol ProfileViewModelProtocol {
 
     var userInfoCell: ProfileAccountInfoCellViewModelProtocol? { get }

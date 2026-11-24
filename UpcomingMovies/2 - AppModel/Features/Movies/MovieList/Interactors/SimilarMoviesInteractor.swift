@@ -14,11 +14,6 @@ struct SimilarMoviesInteractor: MoviesInteractorProtocol {
     let movieUseCase: MovieUseCaseProtocol
     let movieId: Int
 
-    init(movieUseCase: MovieUseCaseProtocol, movieId: Int) {
-        self.movieUseCase = movieUseCase
-        self.movieId = movieId
-    }
-
     func getMovies(page: Int, completion: @escaping (Result<[MovieProtocol], Error>) -> Void) {
         movieUseCase.getSimilarMovies(page: page, movieId: movieId, completion: { result in
             switch result {

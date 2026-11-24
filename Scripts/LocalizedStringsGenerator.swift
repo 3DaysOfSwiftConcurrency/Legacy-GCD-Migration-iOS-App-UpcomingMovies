@@ -21,7 +21,7 @@ public struct LocalizedStringsGenerator {
         \(stringExtension)
 
         \(try localizedStringsEnum(stringsFile))
-        
+
         """
 
         try fileContentString.write(toFile: filePath, atomically: true, encoding: .utf8)

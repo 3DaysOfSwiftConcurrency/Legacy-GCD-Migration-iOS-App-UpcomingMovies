@@ -51,7 +51,11 @@ extension TransitioningAnimator: UIViewControllerAnimatedTransitioning {
             return
         }
 
-        isPresenting ? container.addSubview(toView) : container.insertSubview(toView, belowSubview: fromView)
+        if isPresenting {
+            container.addSubview(toView)
+        } else {
+            container.insertSubview(toView, belowSubview: fromView)
+        }
 
         let transitionableViewController = isPresenting ? toViewController : fromViewController
         let transitionableView: UIView = transitionableViewController.view

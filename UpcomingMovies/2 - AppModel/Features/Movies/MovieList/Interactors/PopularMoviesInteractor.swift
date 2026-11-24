@@ -13,10 +13,6 @@ struct PopularMoviesInteractor: MoviesInteractorProtocol {
 
     let movieUseCase: MovieUseCaseProtocol
 
-    init(movieUseCase: MovieUseCaseProtocol) {
-        self.movieUseCase = movieUseCase
-    }
-
     func getMovies(page: Int, completion: @escaping (Result<[MovieProtocol], Error>) -> Void) {
         movieUseCase.getPopularMovies(page: page, completion: { result in
             switch result {

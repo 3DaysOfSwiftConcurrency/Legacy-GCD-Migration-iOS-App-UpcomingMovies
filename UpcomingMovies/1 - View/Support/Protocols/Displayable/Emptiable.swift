@@ -9,7 +9,7 @@
 import UIKit
 
 private struct AssociatedKeys {
-    static var emptyView: Placeholderable?
+    static var emptyView: UInt8 = 0
 }
 
 protocol Emptiable: AnyObject { }

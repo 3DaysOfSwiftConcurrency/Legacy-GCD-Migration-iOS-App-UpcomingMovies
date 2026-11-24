@@ -25,16 +25,16 @@ class CDUserStoreTests: XCTestCase {
     }
 
     func testSaveUser() {
-        //Arrange
+        // Arrange
         let userToTest = User(id: 1, name: "Alonso", username: "DeluxeAlonso", includeAdult: true, avatarPath: nil)
         let saveExpectation = XCTestExpectation(description: "Save user")
-        //Act
+        // Act
         storeToTest.saveUser(userToTest) { _ in
             let savedUser = self.storeToTest.find(with: 1)
             XCTAssertNotNil(savedUser)
             saveExpectation.fulfill()
         }
-        //Assert
+        // Assert
         wait(for: [saveExpectation], timeout: 1.0)
     }
 

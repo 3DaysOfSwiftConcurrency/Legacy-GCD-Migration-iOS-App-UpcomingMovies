@@ -13,7 +13,7 @@ final class CustomListDetailAssembly: Assembly {
 
     func assemble(container: Container) {
         container.register(CustomListDetailViewModelProtocol.self) { (_, list: ListProtocol) in
-            return MainActor.assumeIsolated {
+            MainActor.assumeIsolated {
                 CustomListDetailViewModel(list, customListDetailFeature: AppModel.shared.customListDetailFeature)
             }
         }

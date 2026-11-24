@@ -11,7 +11,7 @@ import UIKit
 extension UIView {
 
     private struct AssociatedToastKeys {
-        static var toastView: ToastView?
+        static var toastView: UInt8 = 0
     }
 
     private(set) var toastView: ToastView? {
@@ -58,8 +58,11 @@ extension UIView {
             completion?(completed)
         })
         toastView.dismissalTask = Task { @MainActor [weak self, weak toastView] in
-            do { try await Task.sleep(nanoseconds: UInt64(configuration.dismissDuration * 1_000_000_000)) }
-            catch { return }
+            do {
+                try await Task.sleep(nanoseconds: UInt64(configuration.dismissDuration * 1_000_000_000))
+            } catch {
+                return
+            }
             guard let self, let toastView, self.toastView === toastView else { return }
             self.hideToast(withAnimationDuration: configuration.animationDuration)
         }

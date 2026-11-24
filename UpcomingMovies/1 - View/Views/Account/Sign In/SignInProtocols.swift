@@ -9,6 +9,7 @@
 import Foundation
 import UpcomingMoviesDomain
 
+@MainActor
 protocol SignInViewModelProtocol {
 
     var startLoading: AnyBehaviorBindable<Bool> { get }

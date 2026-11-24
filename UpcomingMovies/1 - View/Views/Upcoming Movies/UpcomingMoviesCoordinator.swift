@@ -14,12 +14,6 @@ struct UpcomingMoviesNavigationConfiguration {
     let imageToTransition: UIImage?
     let transitionOffset: CGFloat
 
-    init(selectedFrame: CGRect, imageToTransition: UIImage?, transitionOffset: CGFloat) {
-        self.selectedFrame = selectedFrame
-        self.imageToTransition = imageToTransition
-        self.transitionOffset = transitionOffset
-    }
-
 }
 
 final class UpcomingMoviesCoordinator: BaseCoordinator, UpcomingMoviesCoordinatorProtocol, RootCoordinator, MovieDetailCoordinable {

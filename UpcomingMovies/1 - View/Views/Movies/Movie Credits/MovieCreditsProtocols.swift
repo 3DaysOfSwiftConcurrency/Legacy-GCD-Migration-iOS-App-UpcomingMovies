@@ -8,6 +8,7 @@
 
 import Foundation
 
+@MainActor
 protocol MovieCreditsViewModelProtocol {
 
     var movieTitle: String { get }
